@@ -31,11 +31,6 @@ HID      NES        SNES       GENESIS
 *Note: SELECT + DOWN = HOME on 8BitDo N30*
 
 ## Connectors
-**SNES:** [AliExpress](https://www.aliexpress.com/item/32838396935.html)
-*(Min 1)*
-
-**NES:** [AliExpress](https://www.aliexpress.com/item/4000396420735.html)
-*(Min 30)*
-
-**GENESIS:** [AliExpress](https://www.aliexpress.com/item/4000406448270.html)
-*(Min 100)*
+* **SNES:** [AliExpress](https://www.aliexpress.com/item/32838396935.html) *(Min 1)*
+* **NES:** [AliExpress](https://www.aliexpress.com/item/4000396420735.html) *(Min 30)*
+* **GENESIS:** [AliExpress](https://www.aliexpress.com/item/4000406448270.html) *(Min 100)*
