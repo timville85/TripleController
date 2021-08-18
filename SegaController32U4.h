@@ -28,9 +28,17 @@
 #ifndef SegaController32U4_h
 #define SegaController32U4_h
 
-#define DDR_SELECT   DDRE
-#define PORT_SELECT  PORTE
-#define MASK_SELECT  B01000000
+//#define USE_OLD_WIRING // Uncomment this line to use the old wiring with DB9 pin 6 to Arduino pin 7
+
+#ifdef USE_OLD_WIRING
+  #define DDR_SELECT   DDRD
+  #define PORT_SELECT  PORTD
+  #define MASK_SELECT  B10000000
+#else
+  #define DDR_SELECT   DDRE
+  #define PORT_SELECT  PORTE
+  #define MASK_SELECT  B01000000
+#endif
 
 enum
 {

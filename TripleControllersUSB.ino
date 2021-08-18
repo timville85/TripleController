@@ -114,66 +114,60 @@ void setup()
 
 void loop() { while(1)
 {
-  if((micros() - microsButtons) > BUTTON_READ_DELAY)
-  {    
-    #ifdef DEBUG
-    microsStart = micros();
-    #endif
-
+  //8 cycles needed to capture 6-button controllers
+  for(int i = 0; i < 8; i++)
+  {
     currentState = controller.getStateMD();
     sendState();
+  }
   
+  if((micros() - microsButtons) > BUTTON_READ_DELAY)
+  {    
     // Pulse latch
     sendLatch();
 
-    for(gp=0; gp<GAMEPAD_COUNT; gp++) {
-      buttons[gp][BUTTONS] = 0;
-      buttons[gp][AXES] = 0;
-    }
+    buttons[0][BUTTONS] = 0;
+    buttons[0][AXES] = 0;
+    buttons[1][BUTTONS] = 0;
+    buttons[1][AXES] = 0;
 
     for(uint8_t btn=0; btn<buttonCount; btn++)
     {
-      for(gp=0; gp<GAMEPAD_COUNT; gp++) {
+      for(gp=0; gp<GAMEPAD_COUNT; gp++) 
+      {
         if((PINF & gpBit[gp])==0) buttons[gp][btnByte[btn]] |= btnBits[btn];
       }
       sendClock();
     }
 
-    // Check gamepad type
-    for(gp=0; gp<GAMEPAD_COUNT; gp++) 
+    bitWrite(buttons[0][BUTTONS], 1, bitRead(buttons[0][BUTTONS], 0));
+    bitWrite(buttons[0][BUTTONS], 0, bitRead(buttons[0][BUTTONS], 2));
+    buttons[0][BUTTONS] &= 0xC3;
+
+    // Has any buttons changed state?
+    if (buttons[0][BUTTONS] != buttonsPrev[0][BUTTONS] || buttons[0][AXES] != buttonsPrev[0][AXES])
     {
-      if(controllerType[gp] == NES) {    // NES
-        bitWrite(buttons[gp][BUTTONS], 1, bitRead(buttons[gp][BUTTONS], 0));
-        bitWrite(buttons[gp][BUTTONS], 0, bitRead(buttons[gp][BUTTONS], 2));
-        buttons[gp][BUTTONS] &= 0xC3;
-      }
+      Gamepad[0]._GamepadReport.buttons = buttons[0][BUTTONS];
+      Gamepad[0]._GamepadReport.Y = ((buttons[0][AXES] & DOWN) >> 1) - (buttons[0][AXES] & UP);
+      Gamepad[0]._GamepadReport.X = ((buttons[0][AXES] & RIGHT) >> 3) - ((buttons[0][AXES] & LEFT) >> 2);
+      buttonsPrev[0][BUTTONS] = buttons[0][BUTTONS];
+      buttonsPrev[0][AXES] = buttons[0][AXES];
+      Gamepad[0].send();
     }
 
-    for(gp=0; gp<GAMEPAD_COUNT; gp++)
+    if (buttons[1][BUTTONS] != buttonsPrev[1][BUTTONS] || buttons[1][AXES] != buttonsPrev[1][AXES])
     {
-      // Has any buttons changed state?
-      if (buttons[gp][BUTTONS] != buttonsPrev[gp][BUTTONS] || buttons[gp][AXES] != buttonsPrev[gp][AXES])
-      {
-        Gamepad[gp]._GamepadReport.buttons = buttons[gp][BUTTONS];
-        Gamepad[gp]._GamepadReport.Y = ((buttons[gp][AXES] & DOWN) >> 1) - (buttons[gp][AXES] & UP);
-        Gamepad[gp]._GamepadReport.X = ((buttons[gp][AXES] & RIGHT) >> 3) - ((buttons[gp][AXES] & LEFT) >> 2);
-        buttonsPrev[gp][BUTTONS] = buttons[gp][BUTTONS];
-        buttonsPrev[gp][AXES] = buttons[gp][AXES];
-        Gamepad[gp].send();
-      }
+      Gamepad[1]._GamepadReport.buttons = buttons[1][BUTTONS];
+      Gamepad[1]._GamepadReport.Y = ((buttons[1][AXES] & DOWN) >> 1) - (buttons[1][AXES] & UP);
+      Gamepad[1]._GamepadReport.X = ((buttons[1][AXES] & RIGHT) >> 3) - ((buttons[1][AXES] & LEFT) >> 2);
+      buttonsPrev[1][BUTTONS] = buttons[1][BUTTONS];
+      buttonsPrev[1][AXES] = buttons[1][AXES];
+      Gamepad[1].send();
     }
     
     microsButtons = micros();
-
-    #ifdef DEBUG
-    microsEnd = micros();
-    if(counter < 20) {
-      Serial.println(microsEnd-microsStart);
-      counter++;
-    }
-    #endif
-    
   }
+
 }}
 
 void sendLatch()
