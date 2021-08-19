@@ -1,8 +1,4 @@
-/*  DaemonBite (S)NES Controllers to USB Adapter
- *  Author: Mikael Norrgård <mick@daemonbite.com>
- *
- *  Copyright (c) 2020 Mikael Norrgård <http://daemonbite.com>
- *  
+/*
  *  GNU GENERAL PUBLIC LICENSE
  *  Version 3, 29 June 2007
  *  
@@ -105,10 +101,10 @@ void setup()
   DDRD  |=  B00000011; // output
   PORTD &= ~B00000011; // low
 
-  // Setup data pins A0-A3 (PF7-PF4)
+  // Setup data pins A0-A1 (PF6-PF7)
   DDRF  &= ~B11000000; // inputs
   PORTF |=  B11000000; // enable internal pull-ups
-  
+
   delay(300);
 }
 
@@ -120,7 +116,7 @@ void loop() { while(1)
     currentState = controller.getStateMD();
     sendState();
   }
-  
+
   if((micros() - microsButtons) > BUTTON_READ_DELAY)
   {    
     // Pulse latch
@@ -167,7 +163,6 @@ void loop() { while(1)
     
     microsButtons = micros();
   }
-
 }}
 
 void sendLatch()
