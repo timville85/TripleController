@@ -10,8 +10,8 @@ Based on [DaemonBite Retro Controllers](https://github.com/MickGyver/DaemonBite-
 ```
 HID      NES        SNES       GENESIS
 ---------------------------------------------
-00       B          B          A
-01       A          A          B
+00       B          B          B
+01       A          A          A
 02       N/A        Y          C
 03       N/A        X          X
 04       N/A        L          Y
