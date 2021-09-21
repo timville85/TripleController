@@ -33,9 +33,9 @@ HID      NES        SNES       GENESIS
 * **NES:** [AliExpress](https://www.aliexpress.com/item/4000396420735.html) *(Min 30)*
 * **GENESIS:** [AliExpress](https://www.aliexpress.com/item/4000406448270.html) *(Min 100)*
 
-## Board Example
+## PCB + Assembled Examples
+![unassembled](https://user-images.githubusercontent.com/31223405/134262489-26a5180b-2c78-4ba8-993b-f7132f75200f.jpg)
+![built](https://user-images.githubusercontent.com/31223405/134262494-764370c2-681a-4ca3-b86f-3c8e0dfe66e6.jpg)
 
-![IMG_2943_JP](https://user-images.githubusercontent.com/31223405/129971271-703a2122-ab8e-4b4b-badb-ec7858de713b.jpg)
-![IMG_2944_JP](https://user-images.githubusercontent.com/31223405/129971276-0a78e276-c9bc-4463-b730-26e553dfd439.jpg)
 
 
