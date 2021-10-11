@@ -4,7 +4,7 @@ Based on [DaemonBite Retro Controllers](https://github.com/MickGyver/DaemonBite-
 
 PCB Kits + Assembled units available on [Tindie](https://www.tindie.com/products/timville/triple-controller-classic-gaming-usb-adapter/)
 
-3D Case files designed by [Dinierto Designs](https://www.etsy.com/shop/DiniertoDesigns) and are available on [Thingiverse](https://www.thingiverse.com/thing:5011783)
+3D Case files were designed by [Dinierto Designs](https://www.etsy.com/shop/DiniertoDesigns) and are available on [Thingiverse](https://www.thingiverse.com/thing:5011783)
 
 ## Wiring Diagram
 
