@@ -2,7 +2,7 @@
 
 Based on [DaemonBite Retro Controllers](https://github.com/MickGyver/DaemonBite-Retro-Controllers-USB) by combining the NES/SNES and Genesis projects together for a specific wiring layout to support 3 different controllers with a single Arduino Pro Micro.
 
-PCB Kits + Assembled units available from [Tindie](https://www.tindie.com/products/timville/triple-controller-classic-gaming-usb-adapter/)
+PCB Kits + Assembled units available on [Tindie](https://www.tindie.com/products/timville/triple-controller-classic-gaming-usb-adapter/)
 
 3D Case files also available from [Dinierto Designs on Thingiverse](https://www.thingiverse.com/thing:5011783)
 
