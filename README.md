@@ -4,11 +4,33 @@ Based on [DaemonBite Retro Controllers](https://github.com/MickGyver/DaemonBite-
 
 PCB Kits + Assembled units available on [Tindie](https://www.tindie.com/products/timville/triple-controller-classic-gaming-usb-adapter/)
 
-3D Case files also available from [Dinierto Designs on Thingiverse](https://www.thingiverse.com/thing:5011783)
+3D Case files designed by Dinierto Designs and are available on [Thingiverse](https://www.thingiverse.com/thing:5011783)
 
 ## Wiring Diagram
 
 ![Triple Controller Wiring](https://user-images.githubusercontent.com/31223405/129961434-cc9ba3af-9f03-45be-8147-0c608614a966.png)
+
+## Tested Controllers
+
+The following controllers have been personally tested and are supported with the Triple Controller. All listed devices also fit when using the 3D Case as well.
+
+NES:
+* OEM NES Controller
+* 8BitDo N30 2.4G Receiver
+* 8BitDo NES Retro Receiver
+
+Genesis:
+* OEM Genesis 3-Button Controller
+* OEM Genesis 6-Button Controller
+* 8BitDo M30 2.4G Receiver
+* 8BitDo Genesis Retro Receiver
+* Krikzz Joyzz
+
+SNES:
+* OEM SNES Controller
+* OEM SFC Controller
+* 8BitDo SN30 2.4G Receiver
+* 8BitDo SNES Retro Receiver
 
 ## Controller Button Mapping
 ```
