@@ -54,7 +54,7 @@ HID      NES        SNES       GENESIS
 
 *Note: SELECT + DOWN = HOME on 8BitDo N30*
 
-## Connectors
+## Tested Connectors
 * **SNES:** [AliExpress](https://www.aliexpress.com/item/32838396935.html) *(Min 1)*
 * **NES:** [AliExpress](https://www.aliexpress.com/item/4000396420735.html) *(Min 30)*
 * **GENESIS:** [AliExpress](https://www.aliexpress.com/item/4000406448270.html) *(Min 100)*
@@ -62,6 +62,3 @@ HID      NES        SNES       GENESIS
 ## PCB + Assembled Examples
 ![unassembled](https://user-images.githubusercontent.com/31223405/134262489-26a5180b-2c78-4ba8-993b-f7132f75200f.jpg)
 ![built](https://user-images.githubusercontent.com/31223405/134262494-764370c2-681a-4ca3-b86f-3c8e0dfe66e6.jpg)
-
-
-
