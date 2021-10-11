@@ -4,7 +4,9 @@ Based on [DaemonBite Retro Controllers](https://github.com/MickGyver/DaemonBite-
 
 * PCB - **Done**
 * Software - **Done**
-* 3D Case - _**In Work**_
+* 3D Case - _**Done**
+
+3D Case files also available from [Dinierto Designs on Thingiverse](https://www.thingiverse.com/thing:5011783)
 
 ## Wiring Diagram
 
