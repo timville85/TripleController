@@ -19,7 +19,8 @@ NES:
 * 8BitDo N30 2.4G Receiver
 * 8BitDo NES Retro Receiver
 
-Genesis:
+SEGA / Genesis:
+* OEM SEGA Master System 2-Button Controller
 * OEM Genesis 3-Button Controller
 * OEM Genesis 6-Button Controller
 * 8BitDo M30 2.4G Receiver
@@ -54,10 +55,12 @@ HID      NES        SNES       GENESIS
 
 *Note: SELECT + DOWN = HOME on 8BitDo N30*
 
-## Tested Connectors
+## Tested Parts
 * **SNES:** [AliExpress](https://www.aliexpress.com/item/32838396935.html) *(Min 1)*
 * **NES:** [AliExpress](https://www.aliexpress.com/item/4000396420735.html) *(Min 30)*
-* **GENESIS:** [AliExpress](https://www.aliexpress.com/item/4000406448270.html) *(Min 100)*
+* **SEGA / GENESIS:** [AliExpress](https://www.aliexpress.com/item/4000406448270.html) *(Min 100)*
+* **Micro USB Arduino (3-18v model)** [AliExpress](https://www.aliexpress.com/item/32888212119.html)
+* **USB C Arduino (Type C model)** [AliExpress](https://www.aliexpress.com/item/32888212119.html)
 
 ## PCB + Assembled Examples
 ![unassembled](https://user-images.githubusercontent.com/31223405/134262489-26a5180b-2c78-4ba8-993b-f7132f75200f.jpg)
