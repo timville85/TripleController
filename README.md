@@ -61,6 +61,7 @@ HID      NES        SNES       GENESIS
 * **SEGA / GENESIS:** [AliExpress](https://www.aliexpress.com/item/4000406448270.html) *(Min 100)*
 * **Micro USB Arduino (3-18v model):** [AliExpress](https://www.aliexpress.com/item/32888212119.html)
 * **USB C Arduino (Type C model):** [AliExpress](https://www.aliexpress.com/item/32888212119.html)
+* **1x12 Female Header:** [Digi-Key](https://www.digikey.com/en/products/detail/sullins-connector-solutions/PPTC121LFBN-RC/807231)
 
 ## PCB + Assembled Examples
 ![unassembled](https://user-images.githubusercontent.com/31223405/134262489-26a5180b-2c78-4ba8-993b-f7132f75200f.jpg)
