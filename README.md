@@ -59,8 +59,8 @@ HID      NES        SNES       GENESIS
 * **SNES (90 degree model):** [AliExpress](https://www.aliexpress.com/item/32838396935.html) *(Min 1)*
 * **NES:** [AliExpress](https://www.aliexpress.com/item/4000396420735.html) *(Min 30)*
 * **SEGA / GENESIS:** [AliExpress](https://www.aliexpress.com/item/4000406448270.html) *(Min 100)*
-* **Micro USB Arduino (3-18v model, reinforced):** [AliExpress](https://www.aliexpress.com/item/32888212119.html)
-* **USB C Arduino (Type C model, reinforced):** [AliExpress](https://www.aliexpress.com/item/32888212119.html), [Sparkfun](https://www.sparkfun.com/products/15795)
+* **Micro USB Arduino Pro Micro (3-18v model, reinforced):** [AliExpress](https://www.aliexpress.com/item/32888212119.html)
+* **USB C Arduino Pro Micro (Type C model, reinforced):** [AliExpress](https://www.aliexpress.com/item/32888212119.html), [Sparkfun](https://www.sparkfun.com/products/15795)
 * **1x12 Female Header:** [Digi-Key](https://www.digikey.com/en/products/detail/sullins-connector-solutions/PPTC121LFBN-RC/807231)
 
 ## PCB + Assembled Examples
