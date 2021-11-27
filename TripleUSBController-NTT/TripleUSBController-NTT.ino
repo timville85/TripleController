@@ -145,7 +145,7 @@ void loop()
           buttons[gp] &= 0xC3F;
         }
         else if(controllerType[gp] == NTT) // SNES NTT Data Keypad
-          buttons[gp] &= 0xFFFFFFF; //was 0x3FFFFFF
+          buttons[gp] &= 0xFFFFFFF; //was 0x3FFFFFF, but "end comms" button wasn't working
         else                               // SNES Gamepad
           buttons[gp] &= 0xFFF; 
       }
@@ -189,7 +189,7 @@ void detectControllerTypes()
     // Check controller types and set buttonCount to max needed
     for(gp=0; gp<GAMEPAD_COUNT; gp++) 
     {
-      if((buttons[gp] & 0xF3A0) == 0xF3A0) {   // NES
+      if((buttons[gp] & 0x3A) == 0x3A) {   // NES
         if(controllerType[gp] != SNES && controllerType[gp] != NTT)
           controllerType[gp] = NES;
         if(buttonCountNew < 8)
