@@ -50,7 +50,7 @@ inline void sendClock() __attribute__((always_inline));
 //
 // Wire it all up according to the following table:
 //
-// NES           SNES        Arduino Pro Micro
+// Triple Controller          Arduino Pro Micro
 // --------------------------------------
 // VCC                        VCC (NES & SNES)
 // GND                        GND (NES & SNES)
