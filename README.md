@@ -30,6 +30,7 @@ SEGA / Genesis:
 SNES:
 * OEM SNES Controller
 * OEM SFC Controller
+* OEM SNES NTT Controller (Using NTT Project)
 * 8BitDo SN30 2.4G Receiver
 * 8BitDo SNES Retro Receiver
 
