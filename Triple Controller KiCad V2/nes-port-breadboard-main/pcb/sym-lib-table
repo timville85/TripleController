@@ -1,0 +1,4 @@
+(sym_lib_table
+  (lib (name nes-port-breadboard)(type Legacy)(uri ${KIPRJMOD}/nes-port-breadboard.lib)(options "")(descr ""))
+  (lib (name nes-port-breadboard-rescue)(type Legacy)(uri ${KIPRJMOD}/nes-port-breadboard-rescue.lib)(options "")(descr ""))
+)
