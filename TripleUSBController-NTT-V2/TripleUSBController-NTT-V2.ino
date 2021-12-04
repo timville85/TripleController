@@ -26,7 +26,7 @@
 
 // ATT: 20 chars max (including NULL at the end) according to Arduino source code.
 // Additionally serial number is used to differentiate arduino projects to have different button maps!
-const char *gp_serial = "NES-NTT-GENESIS";
+const char *gp_serial = "NES-NTT-GENESIS-V2";
 
 #define GAMEPAD_COUNT       2       // NOTE: To have more than 2 two gamepads you need to disable the CDC of the Arduino.
 #define GAMEPAD_COUNT_MAX   2  
@@ -52,23 +52,27 @@ inline void sendClock() __attribute__((always_inline));
 //
 // Wire it all up according to the following table:
 //
-// Triple Controller          Arduino Pro Micro
-// --------------------------------------
-// VCC                        VCC (NES & SNES/NTT)
-// GND                        GND (NES & SNES/NTT)
-// OUT0 (LATCH)               2   (PD1, NES & SNES/NTT)
-// CUP  (CLOCK)               3   (PD0, NES & SNES/NTT)
-// D1   (GP1: DATA)           A0  (PF7, NES) 
-// D2   (GP2: DATA)           A1  (PF6, SNES/NTT)
-// DB9-1                      5   (PC6, GENESIS)
-// DB9-2                      6   (PD7, GENESIS)
-// DB9-3                      A2  (PF5, GENESIS)
-// DB9-4                      A3  (PF4, GENESIS)
-// DB9-5                      VCC (GENESIS)
-// DB9-6                      14  (PB3, GENESIS)
-// DB9-7                      7   (PE6, GENESIS)
-// DB9-8                      GND (GENESIS)
-// DB9-9                      15  (PB1, GENESIS)
+// Triple Controller    V1            V2        *** = V1 to V2 Change
+// ------------------------------------------------------------------
+// VCC                  VCC ()        VCC ()
+// GND                  GND ()        GND ()
+// Shared-LATCH         2   (PD1)     2   (PD1)
+// Shared-CLOCK         3   (PD0)     3   (PD0)
+// NES-Data1 (4)        A0  (PF7)     A0  (PF7)
+// NES-Data2 (5)        N/C           9   (PB5) ***
+// NES-Data3 (6)        N/C           8   (PB4) ***
+// SNES-Data1 (4)       A1  (PF6)     A1  (PF6)
+// SNES-Data2 (5)       N/C           RX  (PD2) ***
+// SNES-Data3 (6)       N/C           TX  (PD3) ***
+// DB9-1                5   (PC6)     5   (PC6)
+// DB9-2                6   (PD7)     16  (PB2) ***
+// DB9-3                A2  (PF5)     A2  (PF5)
+// DB9-4                A3  (PF4)     A3  (PF4)
+// DB9-5                VCC ()        6   (PD7) ***
+// DB9-6                14  (PB3)     14  (PB3)
+// DB9-7                7   (PE6)     7   (PE6)
+// DB9-8                GND ()        GND ()
+// DB9-9                15  (PB1)     15  (PB1)
 
 enum ControllerType {
   NONE,
