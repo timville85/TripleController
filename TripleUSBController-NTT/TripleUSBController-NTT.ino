@@ -189,7 +189,7 @@ void detectControllerTypes()
     // Check controller types and set buttonCount to max needed
     for(gp=0; gp<GAMEPAD_COUNT; gp++) 
     {
-      if((buttons[gp] & 0x3A) == 0x3A) {   // NES
+      if((buttons[gp] & 0xF3A0) == 0xF3A0) {   // NES
         if(controllerType[gp] != SNES && controllerType[gp] != NTT)
           controllerType[gp] = NES;
         if(buttonCountNew < 8)
@@ -224,9 +224,9 @@ void sendLatch()
 void sendClock()
 {
   // Send a clock pulse to (S)NES controller(s)
-  PORTD |=  B10000001; // Set HIGH
+  PORTD |=  B00000001; // Set HIGH
   DELAY_CYCLES(CYCLES_CLOCK); 
-  PORTD &= ~B10000001; // Set LOW
+  PORTD &= ~B00000001; // Set LOW
   DELAY_CYCLES(CYCLES_PAUSE);
 }
 
