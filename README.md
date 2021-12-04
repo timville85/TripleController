@@ -6,9 +6,13 @@ PCB Kits + Assembled units available on [Tindie](https://www.tindie.com/products
 
 3D Case files were designed by [Dinierto Designs](https://www.etsy.com/shop/DiniertoDesigns) and are available on [Thingiverse](https://www.thingiverse.com/thing:5011783)
 
-## Wiring Diagram
+## V1 Wiring Diagram
 
 ![Triple Controller Wiring](https://user-images.githubusercontent.com/31223405/129961434-cc9ba3af-9f03-45be-8147-0c608614a966.png)
+
+## V2 Wiring Diagram
+
+**Coming Soon!**
 
 ## Tested Controllers
 
