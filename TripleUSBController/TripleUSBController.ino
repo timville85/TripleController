@@ -29,8 +29,7 @@ const char *gp_serial = "NES-SNES-GENESIS";
 #define BUTTON_READ_DELAY 20 // Delay between button reads in µs
 #define CYCLES_LATCH     128 // 128 12µs according to specs (8 seems to work fine) (1 cycle @ 16MHz takes 62.5ns so 62.5ns * 128 = 8000ns = 8µs)
 #define CYCLES_CLOCK      64 // 6µs according to specs (4 seems to work fine)
-#define CYCLES_PAUSE1     64 // 6µs according to specs (4 seems to work fine)
-#define CYCLES_PAUSE2     58 // 6µs according to specs (4 seems to work fine)
+#define CYCLES_PAUSE      64 // 6µs according to specs (4 seems to work fine)
 
 #define BUTTONS  0
 #define AXES     1
@@ -43,6 +42,7 @@ const char *gp_serial = "NES-SNES-GENESIS";
 
 inline void sendLatch() __attribute__((always_inline));
 inline void sendClock() __attribute__((always_inline));
+void sendState();
 
 // Controller DB9 pins (looking face-on to the end of the plug):
 // 5 4 3 2 1
@@ -92,9 +92,6 @@ uint8_t buttonCount = 12;
 word currentState = 0;
 word lastState = 1;
 
-// Timing
-uint32_t microsButtons = 0;
-
 void setup()
 {
   // Setup latch and clock pins (2,3 or PD1, PD0)
@@ -108,62 +105,65 @@ void setup()
   delay(300);
 }
 
-void loop() { while(1)
-{
-  //8 cycles needed to capture 6-button controllers
-  for(int i = 0; i < 8; i++)
+void loop() 
+{ 
+  while(1)
   {
-    currentState = controller.getStateMD();
-    sendState();
-  }
-
-  if((micros() - microsButtons) > BUTTON_READ_DELAY)
-  {    
-    // Pulse latch
-    sendLatch();
-
-    buttons[0][BUTTONS] = 0;
-    buttons[0][AXES] = 0;
-    buttons[1][BUTTONS] = 0;
-    buttons[1][AXES] = 0;
-
-    for(uint8_t btn=0; btn<buttonCount; btn++)
+    //8 cycles needed to capture 6-button controllers
+    for(int i = 0; i < 8; i++)
     {
-      for(gp=0; gp<GAMEPAD_COUNT; gp++) 
+      currentState = controller.getStateMD();
+      Gamepad[2]._GamepadReport.buttons = currentState >> 4;
+      Gamepad[2]._GamepadReport.Y = ((currentState & SC_BTN_DOWN) >> SC_BIT_SH_DOWN) - ((currentState & SC_BTN_UP) >> SC_BIT_SH_UP);
+      Gamepad[2]._GamepadReport.X = ((currentState & SC_BTN_RIGHT) >> SC_BIT_SH_RIGHT) - ((currentState & SC_BTN_LEFT) >> SC_BIT_SH_LEFT);
+    }
+
+    for(int j = 0; j < 3; j++)
+    {
+      // Pulse latch
+      sendLatch();
+
+      buttons[0][BUTTONS] = 0;
+      buttons[0][AXES] = 0;
+      buttons[1][BUTTONS] = 0;
+      buttons[1][AXES] = 0;
+  
+      for(uint8_t btn=0; btn<buttonCount; btn++)
       {
-        if((PINF & gpBit[gp])==0) buttons[gp][btnByte[btn]] |= btnBits[btn];
+        for(gp=0; gp<GAMEPAD_COUNT; gp++) 
+        {
+          if((PINF & gpBit[gp])==0) buttons[gp][btnByte[btn]] |= btnBits[btn];
+        }
+        sendClock();
       }
-      sendClock();
-    }
+  
+      bitWrite(buttons[0][BUTTONS], 1, bitRead(buttons[0][BUTTONS], 0));
+      bitWrite(buttons[0][BUTTONS], 0, bitRead(buttons[0][BUTTONS], 2));
+      buttons[0][BUTTONS] &= 0xC3;
+  
+      // Has any buttons changed state?
+      if (buttons[0][BUTTONS] != buttonsPrev[0][BUTTONS] || buttons[0][AXES] != buttonsPrev[0][AXES])
+      {
+        Gamepad[0]._GamepadReport.buttons = buttons[0][BUTTONS];
+        Gamepad[0]._GamepadReport.Y = ((buttons[0][AXES] & DOWN) >> 1) - (buttons[0][AXES] & UP);
+        Gamepad[0]._GamepadReport.X = ((buttons[0][AXES] & RIGHT) >> 3) - ((buttons[0][AXES] & LEFT) >> 2);
+        buttonsPrev[0][BUTTONS] = buttons[0][BUTTONS];
+        buttonsPrev[0][AXES] = buttons[0][AXES];
+      }
+  
+      if (buttons[1][BUTTONS] != buttonsPrev[1][BUTTONS] || buttons[1][AXES] != buttonsPrev[1][AXES])
+      {
+        Gamepad[1]._GamepadReport.buttons = buttons[1][BUTTONS];
+        Gamepad[1]._GamepadReport.Y = ((buttons[1][AXES] & DOWN) >> 1) - (buttons[1][AXES] & UP);
+        Gamepad[1]._GamepadReport.X = ((buttons[1][AXES] & RIGHT) >> 3) - ((buttons[1][AXES] & LEFT) >> 2);
+        buttonsPrev[1][BUTTONS] = buttons[1][BUTTONS];
+        buttonsPrev[1][AXES] = buttons[1][AXES];
+      }
+    }    
 
-    bitWrite(buttons[0][BUTTONS], 1, bitRead(buttons[0][BUTTONS], 0));
-    bitWrite(buttons[0][BUTTONS], 0, bitRead(buttons[0][BUTTONS], 2));
-    buttons[0][BUTTONS] &= 0xC3;
-
-    // Has any buttons changed state?
-    if (buttons[0][BUTTONS] != buttonsPrev[0][BUTTONS] || buttons[0][AXES] != buttonsPrev[0][AXES])
-    {
-      Gamepad[0]._GamepadReport.buttons = buttons[0][BUTTONS];
-      Gamepad[0]._GamepadReport.Y = ((buttons[0][AXES] & DOWN) >> 1) - (buttons[0][AXES] & UP);
-      Gamepad[0]._GamepadReport.X = ((buttons[0][AXES] & RIGHT) >> 3) - ((buttons[0][AXES] & LEFT) >> 2);
-      buttonsPrev[0][BUTTONS] = buttons[0][BUTTONS];
-      buttonsPrev[0][AXES] = buttons[0][AXES];
-      Gamepad[0].send();
-    }
-
-    if (buttons[1][BUTTONS] != buttonsPrev[1][BUTTONS] || buttons[1][AXES] != buttonsPrev[1][AXES])
-    {
-      Gamepad[1]._GamepadReport.buttons = buttons[1][BUTTONS];
-      Gamepad[1]._GamepadReport.Y = ((buttons[1][AXES] & DOWN) >> 1) - (buttons[1][AXES] & UP);
-      Gamepad[1]._GamepadReport.X = ((buttons[1][AXES] & RIGHT) >> 3) - ((buttons[1][AXES] & LEFT) >> 2);
-      buttonsPrev[1][BUTTONS] = buttons[1][BUTTONS];
-      buttonsPrev[1][AXES] = buttons[1][AXES];
-      Gamepad[1].send();
-    }
-    
-    microsButtons = micros();
-  }
-}}
+  sendState();
+ }
+}
 
 void sendLatch()
 {
@@ -171,7 +171,7 @@ void sendLatch()
   PORTD |=  B00000010; // Set HIGH
   DELAY_CYCLES(CYCLES_LATCH); 
   PORTD &= ~B00000010; // Set LOW
-  DELAY_CYCLES(CYCLES_PAUSE2);
+  DELAY_CYCLES(CYCLES_PAUSE);
 }
 
 void sendClock()
@@ -180,18 +180,14 @@ void sendClock()
   PORTD |=  B00000001; // Set HIGH
   DELAY_CYCLES(CYCLES_CLOCK); 
   PORTD &= ~B00000001; // Set LOW
-  DELAY_CYCLES(CYCLES_PAUSE1); 
+  DELAY_CYCLES(CYCLES_PAUSE); 
 }
 
 void sendState()
 {
   // Only report controller state if it has changed
-  if (currentState != lastState)
-  {
-    Gamepad[2]._GamepadReport.buttons = currentState >> 4;
-    Gamepad[2]._GamepadReport.Y = ((currentState & SC_BTN_DOWN) >> SC_BIT_SH_DOWN) - ((currentState & SC_BTN_UP) >> SC_BIT_SH_UP);
-    Gamepad[2]._GamepadReport.X = ((currentState & SC_BTN_RIGHT) >> SC_BIT_SH_RIGHT) - ((currentState & SC_BTN_LEFT) >> SC_BIT_SH_LEFT);
-    Gamepad[2].send();
-    lastState = currentState;
-  }
+  Gamepad[0].send();
+  Gamepad[1].send();
+  Gamepad[2].send();
+  delayMicroseconds(400);
 }
