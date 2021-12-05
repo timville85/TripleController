@@ -24,8 +24,6 @@
 // Additionally serial number is used to differentiate arduino projects to have different button maps!
 const char *gp_serial = "NES-SNES-GENESIS";
 
-#define GAMEPAD_COUNT      2
-#define GAMEPAD_COUNT_MAX  2  
 #define BUTTON_READ_DELAY 20 // Delay between button reads in µs
 #define CYCLES_LATCH     128 // 128 12µs according to specs (8 seems to work fine) (1 cycle @ 16MHz takes 62.5ns so 62.5ns * 128 = 8000ns = 8µs)
 #define CYCLES_CLOCK      64 // 6µs according to specs (4 seems to work fine)
@@ -39,7 +37,6 @@ const char *gp_serial = "NES-SNES-GENESIS";
 #define RIGHT 0x08
 
 #define DELAY_CYCLES(n) __builtin_avr_delay_cycles(n)
-
 inline void sendLatch() __attribute__((always_inline));
 inline void sendClock() __attribute__((always_inline));
 void sendState();
@@ -68,37 +65,25 @@ void sendState();
 // DB9-8                      GND (GENESIS)
 // DB9-9                      15  (PB1, GENESIS)
 
-enum ControllerType {
-  NONE,
-  NES,
-  SNES
-};
-
 // Set up USB HID gamepads
 Gamepad_ Gamepad[3];
 SegaController32U4 controller;
 
 // Controllers
-uint8_t buttons[GAMEPAD_COUNT_MAX][2] = {{0,0},{0,0}};
-uint8_t buttonsPrev[GAMEPAD_COUNT_MAX][2] = {{0,0},{0,0}};
-uint8_t gpBit[GAMEPAD_COUNT_MAX] = {B10000000,B01000000};
-ControllerType controllerType[GAMEPAD_COUNT_MAX] = {NES,SNES};
-uint8_t btnByte[12] = {0,0,0,0,1,1,1,1,0,0,0,0};
-uint8_t btnBits[12] = {0x01,0x04,0x40,0x80,UP,DOWN,LEFT,RIGHT,0x02,0x08,0x10,0x20};
-uint8_t gp = 0;
-uint8_t buttonCount = 12;
-
-// Controller states
-word currentState = 0;
-word lastState = 1;
+uint8_t  buttons[2][2] = {{0,0},{0,0}};
+uint8_t  btnByte[12] = {0,0,0,0,1,1,1,1,0,0,0,0};
+uint8_t  btnBits[12] = {0x01,0x04,0x40,0x80,UP,DOWN,LEFT,RIGHT,0x02,0x08,0x10,0x20};
+uint8_t  gp = 0;
+uint8_t  buttonCount = 12;
+uint16_t currentState = 0;
 
 void setup()
 {
-  // Setup latch and clock pins (2,3 or PD1, PD0)
+  // Setup NES / SNES latch and clock pins (2,3 or PD1, PD0)
   DDRD  |=  B00000011; // output
   PORTD &= ~B00000011; // low
 
-  // Setup data pins A0-A1 (PF6-PF7)
+  // Setup NES / SNES data pins A0-A1 (PF6-PF7)
   DDRF  &= ~B11000000; // inputs
   PORTF |=  B11000000; // enable internal pull-ups
 
@@ -110,7 +95,7 @@ void loop()
   while(1)
   {
     //8 cycles needed to capture 6-button controllers
-    for(int i = 0; i < 8; i++)
+    for(uint8_t i = 0; i < 8; i++)
     {
       currentState = controller.getStateMD();
       Gamepad[2]._GamepadReport.buttons = currentState >> 4;
@@ -118,22 +103,25 @@ void loop()
       Gamepad[2]._GamepadReport.X = ((currentState & SC_BTN_RIGHT) >> SC_BIT_SH_RIGHT) - ((currentState & SC_BTN_LEFT) >> SC_BIT_SH_LEFT);
     }
 
-    for(int j = 0; j < 3; j++)
+    for(uint8_t j = 0; j < 1; j++)
     {
       // Pulse latch
       sendLatch();
 
       buttons[0][BUTTONS] = 0;
       buttons[0][AXES] = 0;
+      
       buttons[1][BUTTONS] = 0;
       buttons[1][AXES] = 0;
   
       for(uint8_t btn=0; btn<buttonCount; btn++)
       {
-        for(gp=0; gp<GAMEPAD_COUNT; gp++) 
-        {
-          if((PINF & gpBit[gp])==0) buttons[gp][btnByte[btn]] |= btnBits[btn];
-        }
+        if((PINF & B10000000) == 0) 
+          buttons[0][btnByte[btn]] |= btnBits[btn];
+        
+        if((PINF & B01000000) == 0) 
+          buttons[1][btnByte[btn]] |= btnBits[btn];
+        
         sendClock();
       }
   
@@ -141,24 +129,13 @@ void loop()
       bitWrite(buttons[0][BUTTONS], 0, bitRead(buttons[0][BUTTONS], 2));
       buttons[0][BUTTONS] &= 0xC3;
   
-      // Has any buttons changed state?
-      if (buttons[0][BUTTONS] != buttonsPrev[0][BUTTONS] || buttons[0][AXES] != buttonsPrev[0][AXES])
-      {
-        Gamepad[0]._GamepadReport.buttons = buttons[0][BUTTONS];
-        Gamepad[0]._GamepadReport.Y = ((buttons[0][AXES] & DOWN) >> 1) - (buttons[0][AXES] & UP);
-        Gamepad[0]._GamepadReport.X = ((buttons[0][AXES] & RIGHT) >> 3) - ((buttons[0][AXES] & LEFT) >> 2);
-        buttonsPrev[0][BUTTONS] = buttons[0][BUTTONS];
-        buttonsPrev[0][AXES] = buttons[0][AXES];
-      }
-  
-      if (buttons[1][BUTTONS] != buttonsPrev[1][BUTTONS] || buttons[1][AXES] != buttonsPrev[1][AXES])
-      {
-        Gamepad[1]._GamepadReport.buttons = buttons[1][BUTTONS];
-        Gamepad[1]._GamepadReport.Y = ((buttons[1][AXES] & DOWN) >> 1) - (buttons[1][AXES] & UP);
-        Gamepad[1]._GamepadReport.X = ((buttons[1][AXES] & RIGHT) >> 3) - ((buttons[1][AXES] & LEFT) >> 2);
-        buttonsPrev[1][BUTTONS] = buttons[1][BUTTONS];
-        buttonsPrev[1][AXES] = buttons[1][AXES];
-      }
+      Gamepad[0]._GamepadReport.buttons = buttons[0][BUTTONS];
+      Gamepad[0]._GamepadReport.Y = ((buttons[0][AXES] & DOWN) >> 1) - (buttons[0][AXES] & UP);
+      Gamepad[0]._GamepadReport.X = ((buttons[0][AXES] & RIGHT) >> 3) - ((buttons[0][AXES] & LEFT) >> 2);
+
+      Gamepad[1]._GamepadReport.buttons = buttons[1][BUTTONS];
+      Gamepad[1]._GamepadReport.Y = ((buttons[1][AXES] & DOWN) >> 1) - (buttons[1][AXES] & UP);
+      Gamepad[1]._GamepadReport.X = ((buttons[1][AXES] & RIGHT) >> 3) - ((buttons[1][AXES] & LEFT) >> 2);
     }    
 
   sendState();
@@ -167,7 +144,7 @@ void loop()
 
 void sendLatch()
 {
-  // Send a latch pulse to (S)NES controller(s)
+  // Send a latch pulse to NES/SNES
   PORTD |=  B00000010; // Set HIGH
   DELAY_CYCLES(CYCLES_LATCH); 
   PORTD &= ~B00000010; // Set LOW
@@ -176,7 +153,7 @@ void sendLatch()
 
 void sendClock()
 {
-  // Send a clock pulse to (S)NES controller(s)
+  // Send a clock pulse to NES/SNES
   PORTD |=  B00000001; // Set HIGH
   DELAY_CYCLES(CYCLES_CLOCK); 
   PORTD &= ~B00000001; // Set LOW
@@ -185,9 +162,8 @@ void sendClock()
 
 void sendState()
 {
-  // Only report controller state if it has changed
   Gamepad[0].send();
   Gamepad[1].send();
   Gamepad[2].send();
-  delayMicroseconds(400);
+  delayMicroseconds(750);
 }
