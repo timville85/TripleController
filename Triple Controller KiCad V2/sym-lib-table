@@ -1,5 +1,0 @@
-(sym_lib_table
-  (lib (name promicro)(type Legacy)(uri ${KIPRJMOD}/ProMicroKiCad-master/promicro_library/promicro.lib)(options "")(descr ""))
-  (lib (name nes-port-breadboard)(type Legacy)(uri ${KIPRJMOD}/nes-port-breadboard-main/pcb/nes-port-breadboard.lib)(options "")(descr ""))
-  (lib (name pkl_conn)(type Legacy)(uri ${KIPRJMOD}/pretty-kicad-libs-master/pkl_conn.lib)(options "")(descr ""))
-)
