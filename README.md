@@ -57,7 +57,7 @@ HID      NES        SNES       GENESIS
 *Note: SELECT + DOWN = HOME on 8BitDo N30*
 
 ## Tested Parts
-* **SNES (90 degree model):** [AliExpress](https://www.aliexpress.com/item/32838396935.html) *(Min Qty of 1)*
+* **SNES (90 degree model):** [AliExpress](https://www.aliexpress.com/item/32838396935.html) *(Min Qty of 2)*
 * **NES:** [AliExpress](https://www.aliexpress.com/item/1005003699734963.html) *(Min Qty of 2)*
 * **SEGA / GENESIS:** [AliExpress](https://www.aliexpress.com/item/1005003699497865.html) *(Min Qty of 1)*
 * **Micro USB Arduino Pro Micro (3-18v model, reinforced):** [AliExpress](https://www.aliexpress.com/item/32888212119.html)
