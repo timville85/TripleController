@@ -58,8 +58,8 @@ HID      NES        SNES       GENESIS
 
 ## Tested Parts
 * **SNES (90 degree model):** [AliExpress](https://www.aliexpress.com/item/32838396935.html) *(Min Qty of 1)*
-* **NES:** [AliExpress](https://www.aliexpress.com/item/4000396420735.html) *(Min Qty of 30)*
-* **SEGA / GENESIS:** [AliExpress](https://www.aliexpress.com/item/1005003492333436.html) *(Min Qty of 50)*
+* **NES:** [AliExpress](https://www.aliexpress.com/item/1005003699734963.html) *(Min Qty of 2)*
+* **SEGA / GENESIS:** [AliExpress](https://www.aliexpress.com/item/1005003699497865.html) *(Min Qty of 1)*
 * **Micro USB Arduino Pro Micro (3-18v model, reinforced):** [AliExpress](https://www.aliexpress.com/item/32888212119.html)
 * **Micro USB Arduino Pro Micro (reinforced):** [Amazon](https://www.amazon.com/gp/product/B01HCXMBOU/) *(Pack of 3)*
 * **USB C Arduino Pro Micro (Type C model, reinforced):** [AliExpress](https://www.aliexpress.com/item/32887074671.html), [Sparkfun](https://www.sparkfun.com/products/15795)
