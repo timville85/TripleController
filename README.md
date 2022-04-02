@@ -14,6 +14,14 @@ PCB Kits + Assembled units available on [Tindie](https://www.tindie.com/products
 
 **Coming Soon!**
 
+Power Draw Readings:
+* Arduino Digital IO Max: 40mA
+* Krikzz Joyzz: 			    38mA
+* 8BitDo M30: 			      29mA
+* SEGA 3-Button: 			    3mA
+* SEGA 6-Button: 			    3mA
+* Retrobit 6-Button: 		  2mA
+
 ## Tested Controllers
 
 The following controllers have been personally tested and are supported with the Triple Controller. All listed devices also fit when using the 3D Case as well.
