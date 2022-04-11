@@ -121,8 +121,8 @@ uint32_t  axisIndicator[32] = {0,0,0,0,1,1,1,1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0
 uint16_t  currentState = 0;
 bool      nttActive = false;
 
-uint32_t  dataMaskNES[8] =        {0x01,   // A
-                                   0x02,   // B
+uint32_t  dataMaskNES[8] =        {0x02,   // A
+                                   0x01,   // B
                                    0x40,   // Start 
                                    0x80,   // Select
                                    UP,     // D-Up
