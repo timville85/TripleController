@@ -59,13 +59,13 @@ void sendState();
 // NES-DataD4 (5)       N/C           9   (PB5) ***
 // NES-DataD3 (6)       N/C           8   (PB4) ***
 // SNES-Data1 (4)       A1  (PF6)     A1  (PF6)
-// SNES-Data2 (5)       N/C           RX  (PD2) ***
-// SNES-Data3 (6)       N/C           TX  (PD3) ***
+// SNES-DataD2 (5)      N/C           RX  (PD2) ***
+// SNES-DataD3 (6)      N/C           TX  (PD3) ***
 // DB9-1                5   (PC6)     5   (PC6)
-// DB9-2                6   (PD7)     16  (PB2) ***
+// DB9-2                6   (PD7)     6   (PB2)
 // DB9-3                A2  (PF5)     A2  (PF5)
 // DB9-4                A3  (PF4)     A3  (PF4)
-// DB9-5                VCC ()        6   (PD7) ***
+// DB9-5                VCC ()        16  (PB2) ***
 // DB9-6                14  (PB3)     14  (PB3)
 // DB9-7                7   (PE6)     7   (PE6)
 // DB9-8                GND ()        GND ()
@@ -132,10 +132,10 @@ uint32_t  dataMaskNES[8] =        {0x02,   // A
                                    }; 
 
 // Power Pad D4
-uint32_t  dataMaskPowerPadD4[8] = {0x08,    // 4
-                                   0x04,    // 3
-                                   0x800,   // 12
-                                   0x80,    // 8
+uint32_t  dataMaskPowerPadD4[8] = {0x08,    // PowerPad #4
+                                   0x04,    // PowerPad #3
+                                   0x800,   // PowerPad #12
+                                   0x80,    // PowerPad #8
                                    NODATA,  // No Data
                                    NODATA,  // No Data
                                    NODATA,  // No Data
@@ -143,14 +143,14 @@ uint32_t  dataMaskPowerPadD4[8] = {0x08,    // 4
                                    }; 
 
 // Power Pad D3
-uint32_t  dataMaskPowerPadD3[8] = {0x02,   // 2
-                                   0x01,   // 1
-                                   0x10,   // 5
-                                   0x100,  // 9
-                                   0x20,   // 6
-                                   0x200,  // 10
-                                   0x400,  // 11
-                                   0x40    // 7
+uint32_t  dataMaskPowerPadD3[8] = {0x02,   // PowerPad #2
+                                   0x01,   // PowerPad #1
+                                   0x10,   // PowerPad #5
+                                   0x100,  // PowerPad #9
+                                   0x20,   // PowerPad #6
+                                   0x200,  // PowerPad #10
+                                   0x400,  // PowerPad #11
+                                   0x40    // PowerPad #7
                                    }; 
 
 uint32_t  dataMaskSNES[32] =      {0x01,    // B
