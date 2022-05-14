@@ -6,9 +6,17 @@ PCB Kits + Assembled units available on [Tindie](https://www.tindie.com/products
 
 3D Case files were designed by [Dinierto Designs](https://www.etsy.com/shop/DiniertoDesigns) and are available on [Thingiverse](https://www.thingiverse.com/thing:5011783)
 
-## Wiring Diagram
+## V2 Wiring Diagram
 
-![Triple Controller Wiring](https://user-images.githubusercontent.com/31223405/129961434-cc9ba3af-9f03-45be-8147-0c608614a966.png)
+![TripleController-V2 1-Layout](https://user-images.githubusercontent.com/31223405/163745351-3b86d7f5-2a6d-496b-9ffa-7e4f6356e45c.PNG)
+
+V2 Current Draw Readings from DIO Pin 16:
+* Arduino Rated Max:      40mA
+* Krikzz Joyzz: 			    38mA
+* 8BitDo M30: 			      29mA
+* SEGA 3-Button: 			    3mA
+* SEGA 6-Button: 			    3mA
+* Retrobit 6-Button: 		  2mA
 
 ## Tested Controllers
 
@@ -16,6 +24,7 @@ The following controllers have been personally tested and are supported with the
 
 NES:
 * OEM NES Controller
+* OEM NES PowerPad
 * 8BitDo N30 2.4G Receiver
 * 8BitDo NES Retro Receiver
 
@@ -30,23 +39,23 @@ SEGA / Genesis:
 SNES:
 * OEM SNES Controller
 * OEM SFC Controller
-* OEM SNES NTT Controller (Using NTT Project)
+* OEM SNES NTT Controller
 * 8BitDo SN30 2.4G Receiver
 * 8BitDo SNES Retro Receiver
 
-## Controller Button Mapping
+## V2 Controller Button Mapping
 ```
-HID      NES        SNES       GENESIS
+Button   NES        SNES       GENESIS
 ---------------------------------------------
-00       B          B          B
-01       A          A          C
-02       N/A        Y          A
-03       N/A        X          Y
-04       N/A        L          X
-05       N/A        R          Z
-06       SELECT     SELECT     MODE
-07       START      START      START
-08       N/A        N/A        HOME (8BitDo)
+01       B          B          B
+02       A          A          A
+03       N/A        Y          Y
+04       N/A        X          X
+05       N/A        L          Z
+06       N/A        R          C
+07       SELECT     SELECT     MODE
+08       START      START      START
+09       N/A        N/A        HOME (8BitDo)
 ```
 
 ## MiSTer Home Menu Suggestion

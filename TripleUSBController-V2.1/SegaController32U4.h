@@ -32,18 +32,27 @@
 #define PORT_SELECT  PORTE
 #define MASK_SELECT  B01000000
 
-enum
-{
-  SC_BTN_UP    = 1,
-  SC_BTN_DOWN  = 2,
-  SC_BTN_LEFT  = 4,
-  SC_BTN_RIGHT = 8,
+/*
   SC_BTN_A     = 64,
   SC_BTN_B     = 16,
   SC_BTN_C     = 32,
   SC_BTN_X     = 256,
   SC_BTN_Y     = 128,
   SC_BTN_Z     = 512,
+ */
+
+enum
+{
+  SC_BTN_UP    = 1,
+  SC_BTN_DOWN  = 2,
+  SC_BTN_LEFT  = 4,
+  SC_BTN_RIGHT = 8,
+  SC_BTN_A     = 32,
+  SC_BTN_B     = 16,
+  SC_BTN_C     = 512,
+  SC_BTN_X     = 128,
+  SC_BTN_Y     = 64,
+  SC_BTN_Z     = 256,
   SC_BTN_MODE  = 1024,
   SC_BTN_START = 2048,
   SC_BTN_HOME  = 4096,
