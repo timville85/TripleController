@@ -6,6 +6,8 @@ PCB Kits + Assembled units available on [Tindie](https://www.tindie.com/products
 
 3D Case files were designed by [Dinierto Designs](https://www.etsy.com/shop/DiniertoDesigns) and are available on [Thingiverse](https://www.thingiverse.com/thing:5011783)
 
+Included Controller Map File should be placed in `/media/fat/config/inputs`
+
 ## V2 Wiring Diagram
 
 ![TripleController-V2 1-Layout](https://user-images.githubusercontent.com/31223405/163745351-3b86d7f5-2a6d-496b-9ffa-7e4f6356e45c.PNG)
