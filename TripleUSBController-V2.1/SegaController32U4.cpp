@@ -28,10 +28,16 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 // THE SOFTWARE.
 
+#include <EEPROM.h>
+
 #include "Arduino.h"
 #include "SegaController32U4.h"
 
-SegaController32U4::SegaController32U4(void)
+// Value that triggers MiSTer mode if in EEPROM
+static const char kMisterModeChar = 'M';
+
+SegaController32U4::SegaController32U4(int eeprom_index)
+    : _eeprom_index(eeprom_index)
 {
     // Setup select pin as output high (7, PE6)
     DDR_SELECT  |= MASK_SELECT; // output
@@ -52,13 +58,36 @@ SegaController32U4::SegaController32U4(void)
     _inputReg3 = 0;
     _inputReg4 = 0;
     _currentState = 0;
+    _previousState = 0;
+    _misterMode = (EEPROM.read(_eeprom_index) == kMisterModeChar);
     _connected = 0;
     _sixButtonMode = false;
     _ignoreCycles = 0;
     _pinSelect = true;
 }
 
-word SegaController32U4::getStateMD()
+void SegaController32U4::toggleMisterMode() {
+  _misterMode = !_misterMode;
+  const char value = _misterMode ? kMisterModeChar : 0;
+  EEPROM.write(_eeprom_index, value);
+}
+
+bool SegaController32U4::isMisterMode() {
+    return _misterMode;
+}
+
+// Takes a state and swap btn_1 and btn_2
+static doSwapbuttons(word *state, int btn_1, int btn_2) {
+  const bool one_is_set = (*state) & btn_1;
+  const bool two_is_set = (*state) & btn_2;
+  // Flip bit polarity when the two buttons have different states
+  if (one_is_set ^ two_is_set) {
+    *state ^= btn_1 | btn_2;
+  }
+}
+
+
+word SegaController32U4::updateState()
 {
   // "Normal" Six button controller reading routine, done a bit differently in this project
   // Cycle  TH out  TR in  TL in  D3 in  D2 in  D1 in  D0 in
@@ -154,4 +183,41 @@ word SegaController32U4::getStateMD()
   }
 
   return _currentState;
+}
+
+word SegaController32U4::getFinalState() {
+#ifdef DEBUG
+  if ((_previousState == SC_BTN_HOME) && (_currentState == (SC_BTN_HOME | SC_BTN_C))) {
+    Serial.print("Read value from EEPROM:");
+    Serial.println(isMisterMode());
+  }
+#endif // DEBUG
+
+  // We carefully check for a change in state (edge trigger) to only toggle
+  // MiSTer mode once, even if buttons get pressed a long time.
+  if ((_previousState == SC_BTN_HOME) && (_currentState == (SC_BTN_HOME | SC_BTN_Z))) {
+    toggleMisterMode();
+#ifdef DEBUG
+    Serial.print("Wrote value to EEPROM:");
+    Serial.println(isMisterMode());
+#endif // DEBUG
+  }
+
+  if (isMisterMode()) {
+    doSwapbuttons(&_currentState, SC_BTN_A, SC_BTN_B);
+    doSwapbuttons(&_currentState, SC_BTN_X, SC_BTN_Y);
+  }
+
+  _previousState = _currentState;
+
+  word return_value = _currentState;
+
+  // In Mister mode, instead of sending the custom home button, send MODE +
+  // DOWN.
+  if (isMisterMode() && (return_value & SC_BTN_HOME))
+  {
+    return_value |= (SC_BTN_DOWN | SC_BTN_MODE);
+    return_value &= ~SC_BTN_HOME;
+  }
+  return return_value;
 }
