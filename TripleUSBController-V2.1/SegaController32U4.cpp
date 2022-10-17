@@ -77,7 +77,7 @@ bool SegaController32U4::isMisterMode() {
 }
 
 // Takes a state and swap btn_1 and btn_2
-static doSwapbuttons(word *state, int btn_1, int btn_2) {
+static void doSwapbuttons(word *state, int btn_1, int btn_2) {
   const bool one_is_set = (*state) & btn_1;
   const bool two_is_set = (*state) & btn_2;
   // Flip bit polarity when the two buttons have different states
