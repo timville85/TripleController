@@ -110,10 +110,13 @@ void sendState();
 +--------------------------------+
 */
 
+// Manage EEPROM by making sure everything has
+// its own index.
+enum EEPROMIndices { GENESIS_EEPROM };
 
 // Set up USB HID gamepads
 Gamepad_ Gamepad[3];
-SegaController32U4 controller;
+SegaController32U4 controller(GENESIS_EEPROM);
 
 // Controllers
 uint32_t  controllerData[2][2] = {{0,0},{0,0}};
@@ -215,11 +218,13 @@ void loop()
     //8 cycles needed to capture 6-button controllers
     for(uint8_t i = 0; i < 8; i++)
     {
-      currentState = controller.getStateMD();
-      Gamepad[GENESIS]._GamepadReport.buttons = currentState >> 4;
-      Gamepad[GENESIS]._GamepadReport.Y = ((currentState & SC_BTN_DOWN) >> SC_BIT_SH_DOWN) - ((currentState & SC_BTN_UP) >> SC_BIT_SH_UP);
-      Gamepad[GENESIS]._GamepadReport.X = ((currentState & SC_BTN_RIGHT) >> SC_BIT_SH_RIGHT) - ((currentState & SC_BTN_LEFT) >> SC_BIT_SH_LEFT);
+      currentState = controller.updateState();
     }
+
+    currentState = controller.getFinalState();
+    Gamepad[GENESIS]._GamepadReport.buttons = currentState >> 4;
+    Gamepad[GENESIS]._GamepadReport.Y = ((currentState & SC_BTN_DOWN) >> SC_BIT_SH_DOWN) - ((currentState & SC_BTN_UP) >> SC_BIT_SH_UP);
+    Gamepad[GENESIS]._GamepadReport.X = ((currentState & SC_BTN_RIGHT) >> SC_BIT_SH_RIGHT) - ((currentState & SC_BTN_LEFT) >> SC_BIT_SH_LEFT);
 
     for(uint8_t j = 0; j < 1; j++)
     {

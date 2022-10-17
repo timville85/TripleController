@@ -45,19 +45,37 @@ SNES:
 * 8BitDo SN30 2.4G Receiver
 * 8BitDo SNES Retro Receiver
 
+## MiSTer mode on 8bitdo M30 controller
+
+The Triple Controller exposes three "players" on one USB device.  Unfortunately
+MiSTer does not support setting keymaps per "player", MiSTer mode works around
+this by making sure the positional mapping is the same between all controllers.
+
+MiSTer mode can be toggled on and off with "HOME + Z" (you have to press HOME
+first, Z second). This setting is saved to EEPROM and preserved across power
+cycles. The default is "normal mode".
+
+When the Genesis controller is in MiSTer mode:
+
+- The HOME button sends "DOWN + MODE" (This is because no equivalent of the
+  HOME button exists on the other controller ports)
+
+- Buttons are swapped: A with B and X with Y. This is such that the position of
+  the buttons is consistent between SNES and Genesis.
+
 ## V2 Controller Button Mapping
 ```
-Button   NES        SNES       GENESIS
----------------------------------------------
-01       B          B          B
-02       A          A          A
-03       N/A        Y          Y
-04       N/A        X          X
-05       N/A        L          Z
-06       N/A        R          C
-07       SELECT     SELECT     MODE
-08       START      START      START
-09       N/A        N/A        HOME (8BitDo)
+Button   NES        SNES       GENESIS (normal)    GENESIS (MiSTer)
+-------------------------------------------------------------------
+01       B          B          B                   A 
+02       A          A          A                   B
+03       N/A        Y          Y                   X
+04       N/A        X          X                   Y
+05       N/A        L          Z                   Z
+06       N/A        R          C                   C
+07       SELECT     SELECT     MODE                MODE
+08       START      START      START               START
+09       N/A        N/A        HOME (8BitDo)       (N/A but HOME will send MODE + DOWN)
 ```
 
 ## MiSTer Home Menu Suggestion

@@ -73,11 +73,23 @@ const byte SC_CYCLE_DELAY = 10; // Delay (µs) between setting the select pin an
 class SegaController32U4 
 {
   public:
-    SegaController32U4(void);
-    word getStateMD();
+    // |eeprom_index| is the eeprom storage reserved for this instance.
+    SegaController32U4(int eeprom_index);
+    word updateState(void);
+    word getFinalState(void);
 
   private:
+    // Should A and B and X and Y be swapped?
+    void toggleMisterMode(void);
+    bool isMisterMode(void);
+
+    const int _eeprom_index;
+
+    // This acts as a cache to not routinely read EEPROM.
+    bool _misterMode;
+
     word _currentState;
+    word _previousState;
 
     boolean _pinSelect;
 
