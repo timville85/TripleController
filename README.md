@@ -6,6 +6,11 @@ PCB Kits + Assembled units available on [Tindie](https://www.tindie.com/products
 
 3D Case files were designed by [Dinierto Designs](https://www.etsy.com/shop/DiniertoDesigns) and are available on [Thingiverse](https://www.thingiverse.com/thing:5011783)
 
+3D Case Size Reference:
+* 33mm - Most Micro USB Pro Micro / Sparkfun USB-C Pro Micro boards
+* 35-36mm - Most AliExpress USB-C Pro Micro boards
+* 36-37mm - Some AliExpress USB-C Pro Micro boards (typically with empty hole next to USB-C port)
+
 Included Controller Map File should be placed in `/media/fat/config/inputs`
 
 ## V2 Wiring Diagram
