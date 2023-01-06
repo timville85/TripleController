@@ -120,7 +120,7 @@ uint32_t  dataMaskSNES[32] =      {0x01,    // B
 
 void setup()
 {
-  XInput.begin();
+  XInput.setAutoSend(false);
   
   // Setup NES / SNES latch and clock pins (2/3 or PD1/PD0)
   DDRD  |=  B00000011; // output
@@ -138,14 +138,11 @@ void setup()
   DDRB  |= B00000100; // output
   PORTB |= B00000100; // high
 
-  pinMode(10, OUTPUT);
-
   delay(250);
 }
 
 void loop() 
 {  
-    digitalWrite(10,1);
     currentGenesisState = 0;
     
     //8 cycles needed to capture 6-button controllers
@@ -223,7 +220,6 @@ void loop()
     }    
   
   sendState();
-  digitalWrite(10,0);
 }
 
 void sendLatch()
@@ -245,7 +241,7 @@ void sendClock()
 }
 
 void sendState()
-{  
+{    
   XInput.setButton(BUTTON_A,      (controllerData[NES][BUTTONS] & 0x01) | (controllerData[SNES][BUTTONS] & 0x01) | (currentGenesisState & SC_BTN_B)     );
   XInput.setButton(BUTTON_B,      (controllerData[NES][BUTTONS] & 0x02) | (controllerData[SNES][BUTTONS] & 0x02) | (currentGenesisState & SC_BTN_C)     );
   XInput.setButton(BUTTON_BACK,   (controllerData[NES][BUTTONS] & 0x40) | (controllerData[SNES][BUTTONS] & 0x40) | (currentGenesisState & SC_BTN_MODE)  );
@@ -264,5 +260,5 @@ void sendState()
 
   XInput.setButton(BUTTON_LOGO, (currentGenesisState & SC_BTN_HOME));
 
-  //__builtin_avr_delay_cycles(12000);
+  XInput.send();
 }
