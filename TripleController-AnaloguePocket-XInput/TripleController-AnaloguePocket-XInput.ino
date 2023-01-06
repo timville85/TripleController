@@ -138,13 +138,14 @@ void setup()
   DDRB  |= B00000100; // output
   PORTB |= B00000100; // high
 
+  pinMode(10, OUTPUT);
+
   delay(250);
 }
 
 void loop() 
-{ 
-  while(true)
-  {
+{  
+    digitalWrite(10,1);
     currentGenesisState = 0;
     
     //8 cycles needed to capture 6-button controllers
@@ -220,9 +221,9 @@ void loop()
         sendClock();
       }
     }    
-
+  
   sendState();
- }
+  digitalWrite(10,0);
 }
 
 void sendLatch()
@@ -244,24 +245,24 @@ void sendClock()
 }
 
 void sendState()
-{
-    XInput.setButton(BUTTON_A,      (controllerData[NES][BUTTONS] & 0x01) | (controllerData[SNES][BUTTONS] & 0x01) | (currentGenesisState & SC_BTN_B)     );
-    XInput.setButton(BUTTON_B,      (controllerData[NES][BUTTONS] & 0x02) | (controllerData[SNES][BUTTONS] & 0x02) | (currentGenesisState & SC_BTN_C)     );
-    XInput.setButton(BUTTON_BACK,   (controllerData[NES][BUTTONS] & 0x40) | (controllerData[SNES][BUTTONS] & 0x40) | (currentGenesisState & SC_BTN_MODE)  );
-    XInput.setButton(BUTTON_START,  (controllerData[NES][BUTTONS] & 0x80) | (controllerData[SNES][BUTTONS] & 0x80) | (currentGenesisState & SC_BTN_START) );
+{  
+  XInput.setButton(BUTTON_A,      (controllerData[NES][BUTTONS] & 0x01) | (controllerData[SNES][BUTTONS] & 0x01) | (currentGenesisState & SC_BTN_B)     );
+  XInput.setButton(BUTTON_B,      (controllerData[NES][BUTTONS] & 0x02) | (controllerData[SNES][BUTTONS] & 0x02) | (currentGenesisState & SC_BTN_C)     );
+  XInput.setButton(BUTTON_BACK,   (controllerData[NES][BUTTONS] & 0x40) | (controllerData[SNES][BUTTONS] & 0x40) | (currentGenesisState & SC_BTN_MODE)  );
+  XInput.setButton(BUTTON_START,  (controllerData[NES][BUTTONS] & 0x80) | (controllerData[SNES][BUTTONS] & 0x80) | (currentGenesisState & SC_BTN_START) );
 
-    XInput.setDpad( (controllerData[NES][AXES] & UP)          |  (controllerData[SNES][AXES] & UP)          | ((currentGenesisState & SC_BTN_UP) >> SC_BIT_SH_UP), 
-                   ((controllerData[NES][AXES] & DOWN) >> 1)  | ((controllerData[SNES][AXES] & DOWN) >> 1)  | ((currentGenesisState & SC_BTN_DOWN) >> SC_BIT_SH_DOWN), 
-                   ((controllerData[NES][AXES] & LEFT) >> 2)  | ((controllerData[SNES][AXES] & LEFT) >> 2)  | ((currentGenesisState & SC_BTN_LEFT) >> SC_BIT_SH_LEFT), 
-                   ((controllerData[NES][AXES] & RIGHT) >> 3) | ((controllerData[SNES][AXES] & RIGHT) >> 3) | ((currentGenesisState & SC_BTN_RIGHT) >> SC_BIT_SH_RIGHT),
-                  true);
+  XInput.setDpad( (controllerData[NES][AXES] & UP)          |  (controllerData[SNES][AXES] & UP)          | ((currentGenesisState & SC_BTN_UP) >> SC_BIT_SH_UP), 
+                 ((controllerData[NES][AXES] & DOWN) >> 1)  | ((controllerData[SNES][AXES] & DOWN) >> 1)  | ((currentGenesisState & SC_BTN_DOWN) >> SC_BIT_SH_DOWN), 
+                 ((controllerData[NES][AXES] & LEFT) >> 2)  | ((controllerData[SNES][AXES] & LEFT) >> 2)  | ((currentGenesisState & SC_BTN_LEFT) >> SC_BIT_SH_LEFT), 
+                 ((controllerData[NES][AXES] & RIGHT) >> 3) | ((controllerData[SNES][AXES] & RIGHT) >> 3) | ((currentGenesisState & SC_BTN_RIGHT) >> SC_BIT_SH_RIGHT),
+                true);
 
-    XInput.setButton(BUTTON_X,   (controllerData[SNES][BUTTONS] & 0x04) | (currentGenesisState & SC_BTN_A) );
-    XInput.setButton(BUTTON_Y,   (controllerData[SNES][BUTTONS] & 0x08) | (currentGenesisState & SC_BTN_Y) );
-    XInput.setButton(BUTTON_LB,  (controllerData[SNES][BUTTONS] & 0x10) | (currentGenesisState & SC_BTN_X) );
-    XInput.setButton(BUTTON_RB,  (controllerData[SNES][BUTTONS] & 0x20) | (currentGenesisState & SC_BTN_Z) );
+  XInput.setButton(BUTTON_X,   (controllerData[SNES][BUTTONS] & 0x04) | (currentGenesisState & SC_BTN_A) );
+  XInput.setButton(BUTTON_Y,   (controllerData[SNES][BUTTONS] & 0x08) | (currentGenesisState & SC_BTN_Y) );
+  XInput.setButton(BUTTON_LB,  (controllerData[SNES][BUTTONS] & 0x10) | (currentGenesisState & SC_BTN_X) );
+  XInput.setButton(BUTTON_RB,  (controllerData[SNES][BUTTONS] & 0x20) | (currentGenesisState & SC_BTN_Z) );
 
-    XInput.setButton(BUTTON_LOGO, (currentGenesisState & SC_BTN_HOME));
+  XInput.setButton(BUTTON_LOGO, (currentGenesisState & SC_BTN_HOME));
 
-  __builtin_avr_delay_cycles(4000);
+  //__builtin_avr_delay_cycles(12000);
 }
