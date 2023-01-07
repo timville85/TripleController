@@ -143,6 +143,8 @@ void setup()
 
 void loop() 
 {  
+    digitalWrite(10, HIGH);
+    
     currentGenesisState = 0;
     
     //8 cycles needed to capture 6-button controllers
@@ -218,7 +220,6 @@ void loop()
         sendClock();
       }
     }    
-  
   sendState();
 }
 
@@ -242,6 +243,10 @@ void sendClock()
 
 void sendState()
 {    
+  // Reset all cached button presses to force a full update every cycle.
+  XInput.releaseAll();
+
+  // Use controller data from all 3 inputs to map to single XInput Controller (takes about 350us per controller cycle)
   XInput.setButton(BUTTON_A,      (controllerData[NES][BUTTONS] & 0x01) | (controllerData[SNES][BUTTONS] & 0x01) | (currentGenesisState & SC_BTN_B)     );
   XInput.setButton(BUTTON_B,      (controllerData[NES][BUTTONS] & 0x02) | (controllerData[SNES][BUTTONS] & 0x02) | (currentGenesisState & SC_BTN_C)     );
   XInput.setButton(BUTTON_BACK,   (controllerData[NES][BUTTONS] & 0x40) | (controllerData[SNES][BUTTONS] & 0x40) | (currentGenesisState & SC_BTN_MODE)  );
@@ -260,5 +265,6 @@ void sendState()
 
   XInput.setButton(BUTTON_LOGO, (currentGenesisState & SC_BTN_HOME));
 
+  // Takes about 3-4ms to send USB Packet on Analogue Pocket (likely 250hz polling rate)
   XInput.send();
 }
