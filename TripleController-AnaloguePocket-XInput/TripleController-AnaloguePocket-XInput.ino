@@ -242,7 +242,7 @@ void sendClock()
 }
 
 void sendState()
-{    
+{ 
   // Reset all cached button presses to force a full update every cycle.
   XInput.releaseAll();
 
@@ -265,6 +265,7 @@ void sendState()
 
   XInput.setButton(BUTTON_LOGO, (currentGenesisState & SC_BTN_HOME));
 
-  // Takes about 3-4ms to send USB Packet on Analogue Pocket (likely 250hz polling rate)
-  XInput.send();
+  // Takes about 1.4-1.5ms to send USB Packet on MiSTer (at 1000hz polling rate)
+  // Takes about 3-4ms to send USB Packet on Analogue Pocket Dock (likely 250hz polling rate)
+  XInput.send(); 
 }
