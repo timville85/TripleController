@@ -64,3 +64,4 @@ To restore the default firmware for your Arduino Pro Micro, you will need to man
 2. Connect your Arduino Pro Micro to your computer.
 3. Trigger the download from the Arduino software. The Arduino software will first compile the project before beginning the download.
 4. Once the "compiling" step has finished, trigger a reset on the Arduino Pro Micro by briefly touching the Reset (RST) and Ground (GND) pins together. This should make the Arduino forcefully switch into bootloader mode and allow the download to complete. If the download fails initially due to not finding the COM port, repeat the download/reset process and it should work the second time.
+<img src="https://github.com/timville85/TripleController/assets/31223405/82962a3f-7088-45ed-b602-8e5429e59bb9" width=30% height=30%>
