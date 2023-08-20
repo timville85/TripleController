@@ -1,5 +1,0 @@
-(fp_lib_table
-  (lib (name nes-port-breadboard)(type KiCad)(uri ${KIPRJMOD}/nes-port-breadboard-main/pcb/nes-port-breadboard.pretty)(options "")(descr ""))
-  (lib (name promicro)(type KiCad)(uri ${KIPRJMOD}/ProMicroKiCad-master/promicro.pretty)(options "")(descr ""))
-  (lib (name pkl_connectors)(type KiCad)(uri ${KIPRJMOD}/pretty-kicad-libs-master/pkl_connectors.pretty)(options "")(descr ""))
-)
