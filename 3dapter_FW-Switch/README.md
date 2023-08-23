@@ -9,8 +9,6 @@ The controller inputs have been mapped to align to map to the Nintendo Switch Vi
 
 **You can accomplish this by connecting the RST and GND pins together - a tip of a screwdriver works well since the pins are next to each other.**
 
-<img src="https://github.com/timville85/TripleController/assets/31223405/82962a3f-7088-45ed-b602-8e5429e59bb9" width=30% height=30%>
-
 ## Switch Special Button Combos
 
 NES:
