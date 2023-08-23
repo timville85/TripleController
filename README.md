@@ -5,9 +5,9 @@ This project combines the NES, SNES and Genesis DaemonBite Retro Controllers pro
 PCB Kits + Fully Assembled units (with firmware of your choice) available on [Tindie](https://www.tindie.com/products/timville/triple-controller-classic-gaming-usb-adapter/)
 
 3 different firmware versions are available in this repo:
-* **Default:** Optimized for MiSTer, PC, Raspberry Pi, etc. - reports as 3 separate controllers, supports multiplayer from a single unit.
-* **Analogue Pocket:** Optimized for Pocket Dock - reports as a single wired XInput device.
-* **Nintendo Switch:** Optimized for Nintendo Switch Online NES, SNES, and Genesis collections - reports as a single wired switch controller.
+* **HID:** Optimized for MiSTer, PC, Raspberry Pi, etc. - reports as 3 separate controllers, supports multiplayer from a single unit.
+* **XInput:** Optimized for Analogue Pocket Dock - reports as a single wired XInput device.
+* **Switch:** Optimized for Nintendo Switch - Useful when using NSO NES, SNES, and Genesis collections - reports as a single wired switch controller.
 
 ## Resources Used
 
