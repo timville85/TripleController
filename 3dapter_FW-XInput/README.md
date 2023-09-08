@@ -9,7 +9,7 @@ The controller inputs have been mapped to align with the default mapping on the 
 
 **You can accomplish this by connecting the RST and GND pins together - a tip of a screwdriver works well since the pins are next to each other.**
 
-![IMG_2003](https://github.com/timville85/TripleController/assets/31223405/b407d6e9-23bf-4204-840a-c814300fc317)
+<img src="https://github.com/timville85/TripleController/assets/31223405/b407d6e9-23bf-4204-840a-c814300fc317" width=30% height=30%>
 
 ### Resources Used
 
