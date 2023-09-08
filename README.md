@@ -2,12 +2,12 @@
 
 This project combines the NES, SNES and Genesis DaemonBite Retro Controllers projects together with a custom PCB to support 3 different controllers with a single socketed Arduino Pro Micro. PCB (KiCad + Gerbers), 3D Cases, and muliple firmware versions (Arduino code) all available in this repository.
 
-PCB Kits + Fully Assembled units (with firmware of your choice) available on [Tindie](https://www.tindie.com/products/timville/triple-controller-classic-gaming-usb-adapter/)
+PCB Kits + Fully Assembled units (with firmware of your choice) available on [Tindie](https://www.tindie.com/products/24994/)
 
 3 different firmware versions are available in this repo:
-* **HID:** Optimized for MiSTer, PC, Raspberry Pi, etc. - reports as 3 separate controllers, supports multiplayer from a single unit.
-* **XInput:** Optimized for Analogue Pocket Dock - reports as a single wired XInput device.
-* **Switch:** Optimized for Nintendo Switch - Useful when using NSO NES, SNES, and Genesis collections - reports as a single wired switch controller.
+* Default: Optimized for MiSTer, PC, Raspberry Pi, etc. - reports as 3 separate controllers, supports multiplayer from a single unit.
+* Analogue Pocket: Optimized for Pocket Dock - reports as a single wired XInput device.
+* Nintendo Switch: Optimized for Nintendo Switch Online NES, SNES, and Genesis collections - reports as a single wired switch controller.
 
 ## Resources Used
 
@@ -28,7 +28,7 @@ PCB Kits + Fully Assembled units (with firmware of your choice) available on [Ti
 
 ## Wiring Diagram
 
-![Triple Controller Wiring (1)](https://github.com/timville85/TripleController/assets/31223405/85cbf4a6-9cea-4e60-aa4a-3e336e698bdf)
+![TripleController-V2 1-Layout](https://user-images.githubusercontent.com/31223405/163745351-3b86d7f5-2a6d-496b-9ffa-7e4f6356e45c.PNG)
 
 Current Draw Readings from DIO Pin 16 (used for 5v supply for DB9 port):
 * Krikzz Joyzz:	38mA
@@ -72,7 +72,9 @@ SNES:
 
 * **1x Genesis Socket:** [AliExpress - Gamers Zone Store](https://www.aliexpress.com/item/1005003699497865.html)
 
-* **1x Arduino Pro Micro (USB-C):** [AliExpress](https://www.aliexpress.com/item/32888212119.html) **or 1x Micro USB Arduino Pro Micro (reinforced USB port):** [Amazon](https://www.amazon.com/gp/product/B01HCXMBOU/) *(Pack of 3)*
+* **Micro USB Arduino Pro Micro (reinforced USB port):** [Amazon](https://www.amazon.com/gp/product/B01HCXMBOU/) *(Pack of 3)*
+
+* **1x Arduino Pro Micro (USB-C):** [AliExpress](https://www.aliexpress.com/item/32888212119.html)
 
 * **2x 1x12 Female Header:** [Digi-Key](https://www.digikey.com/en/products/detail/sullins-connector-solutions/PPTC121LFBN-RC/807231)
 
