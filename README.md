@@ -9,6 +9,8 @@ PCB Kits + Fully Assembled units (with firmware of your choice) available on [Ti
 * Analogue Pocket: Optimized for Pocket Dock - reports as a single wired XInput device.
 * Nintendo Switch: Optimized for Nintendo Switch Online NES, SNES, and Genesis collections - reports as a single wired switch controller.
 
+Looking for a version with an N64 port? Check out the [4dapter](https://github.com/timville85/4dapter)!
+
 ## Resources Used
 
 * [DaemonBite Retro Controllers](https://github.com/MickGyver/DaemonBite-Retro-Controllers-USB)
