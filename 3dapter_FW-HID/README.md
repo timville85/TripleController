@@ -7,17 +7,36 @@ The default HID firmware will allow the 3dapter (Triple Controller) to appear a 
 To maintain proper button mapping on MiSTer, it's recommended to map the SNES controller on the MiSTer Main menu and the NES / Genesis controllers will align to their core defaults properly.
 
 ```
-Button   NES        SNES       GENESIS (normal)    GENESIS (MiSTer)
+     NES    PowerPad  SNES     GEN(normal)  GEN(MiSTer)  N64
 -------------------------------------------------------------------
-01       B          B          B                   A 
-02       A          A          A                   B
-03       N/A        Y          Y                   X
-04       N/A        X          X                   Y
-05       N/A        L          Z                   Z
-06       N/A        R          C                   C
-07       SELECT     SELECT     MODE                MODE
-08       START      START      START               START
-09       N/A        N/A        HOME (8BitDo)       (N/A but HOME will send MODE + DOWN)
+X    U/D    N/A       U/D      U/D          U/D
+Y    L/R    N/A       L/R      L/R          L/R
+01   B      Pad 01    B        B            A
+02   A      Pad 02    A        A            B
+03   N/A    Pad 03    Y        Y            X
+04   N/A    Pad 04    X        X            Y
+05   N/A    Pad 05    L        Z            Z
+06   N/A    Pad 06    R        C            C
+07   SELECT Pad 07    SELECT   MODE         MODE
+08   START  Pad 08    START    START        START
+09   N/A    Pad 09    NTT 0    HOME(8BitDo) [SPECIAL]
+10   N/A    Pad 10    NTT 1    N/A          N/A 
+11   N/A    Pad 11    NTT 2    N/A          N/A
+12   N/A    Pad 12    NTT 3    N/A          N/A
+13   N/A    N/A       NTT 4    N/A          N/A
+14   N/A    N/A       NTT 5    N/A          N/A
+15   N/A    N/A       NTT 6    N/A          N/A
+16   N/A    N/A       NTT 7    N/A          N/A
+17   N/A    N/A       NTT 8    N/A          N/A
+18   N/A    N/A       NTT 9    N/A          N/A
+19   N/A    N/A       NTT *    N/A          N/A
+20   N/A    N/A       NTT #    N/A          N/A
+21   N/A    N/A       NTT .    N/A          N/A 
+22   N/A    N/A       NTT C    N/A          N/A
+23   N/A    N/A       N/A      N/A          N/A
+24   N/A    N/A       NTT End  N/A          N/A
+
+* GENESIS(MiSTer): Mode will send Select + Down
 ```
 
 ## MiSTer Home Menu Suggestion
