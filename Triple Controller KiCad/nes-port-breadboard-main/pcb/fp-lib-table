@@ -1,3 +1,0 @@
-(fp_lib_table
-  (lib (name nes-port-breadboard)(type KiCad)(uri ${KIPRJMOD}/nes-port-breadboard.pretty)(options "")(descr ""))
-)
