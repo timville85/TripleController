@@ -7,8 +7,8 @@ The default HID firmware will allow the 3dapter (Triple Controller) to appear a 
 To maintain proper button mapping on MiSTer, it's recommended to map the SNES controller on the MiSTer Main menu and the NES / Genesis controllers will align to their core defaults properly.
 
 ```
-     NES    PowerPad  SNES     GEN(normal)  GEN(MiSTer)  N64
--------------------------------------------------------------------
+     NES    PowerPad  SNES     GEN(normal)  GEN(MiSTer)
+-------------------------------------------------------
 X    U/D    N/A       U/D      U/D          U/D
 Y    L/R    N/A       L/R      L/R          L/R
 01   B      Pad 01    B        B            A
