@@ -4,6 +4,11 @@ This alternative firmware will allow the 3dapter (Triple Controller) to appear a
 
 The controller inputs have been mapped to align with the default mapping on the Analogue Pocket Dock (as of firmware 1.1).
 
+"Home" Button is supported on each controller type to bring up the Analogue Dock menu:
+* NES: `Select + Down`
+* SNES: `Select + Down`
+* Genesis: `Mode + Down` (or 8BitDo M30 'Heart' button)
+
 ## IMPORTANT NOTE
 **Installing the XInput Library will remove the self-reset listener from the Arduino board. This means you will need to manually reset the Arduino when updating the code on the board or switching to a different firmware.**
 
