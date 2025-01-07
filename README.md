@@ -76,7 +76,7 @@ SNES:
 
 * **Micro USB Arduino Pro Micro (reinforced USB port):** [Amazon](https://www.amazon.com/gp/product/B01HCXMBOU/) *(Pack of 3)*
 
-* **1x Arduino Pro Micro (USB-C):** [AliExpress](https://www.aliexpress.com/item/32888212119.html)
+* **1x Arduino Pro Micro (USB-C 3-15V Version):** [AliExpress](https://www.aliexpress.us/item/2251832700923799.html)
 
 * **2x 1x12 Female Header:** [Digi-Key](https://www.digikey.com/en/products/detail/sullins-connector-solutions/PPTC121LFBN-RC/807231)
 
