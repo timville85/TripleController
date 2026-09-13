@@ -66,6 +66,10 @@ SegaController32U4::SegaController32U4(int eeprom_index)
     _pinSelect = true;
 }
 
+bool SegaController32U4::isSixButtonMode() const {
+  return _sixButtonMode;
+}
+
 void SegaController32U4::toggleMisterMode() {
   _misterMode = !_misterMode;
   const char value = _misterMode ? kMisterModeChar : 0;

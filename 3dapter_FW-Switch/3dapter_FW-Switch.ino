@@ -3,6 +3,7 @@
 #include <LUFA.h>
 #include "Joystick.h"
 #include "SegaController32U4.h"
+#include "NesSnesShiftReader.h"
 
 uint32_t buttonStatus[18];
 
@@ -57,13 +58,11 @@ uint32_t buttonStatus[18];
 #define BUTTONS   0
 #define AXES      1
 
+// Bit values match the shared NesSnesShiftReader's DPAD_* constants.
 #define UP        0x01
 #define DOWN      0x02
 #define LEFT      0x04
 #define RIGHT     0x08
-
-#define NTT_BIT   0x00
-#define NODATA    0x00
 
 long LeftX = 0;
 long LeftY = 0;
@@ -74,8 +73,6 @@ bool Swap_DPAD_JOY = false;
 bool Swap_Gen_Button = false;
 #define toggleDelay 1500
 
-void sendLatch();
-void sendClock();
 void sendState();
 void processInputs();
 
@@ -85,80 +82,13 @@ enum EEPROMIndices { GENESIS_EEPROM };
 
 // Set up USB HID gamepads
 SegaController32U4  gen_controller(GENESIS_EEPROM);
+NesSnesShiftReader nesSnesReader;
 
 // Controllers
 uint32_t  controllerData[2][2]  = {{0,0},{0,0}};
-uint32_t  axisIndicator[32]     = {0,0,0,0,1,1,1,1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0};
 uint16_t  currentGenesisState   = 0;
-bool      nttActive             = false;
 
-uint32_t  dataMaskNES[8] =        {0x02,   // A
-                                   0x01,   // B
-                                   0x40,   // Start 
-                                   0x80,   // Select
-                                   UP,     // D-Up
-                                   DOWN,   // D-Down
-                                   LEFT,   // D-Left
-                                   RIGHT   // D-Right
-                                   }; 
-
-// Power Pad D4
-uint32_t  dataMaskPowerPadD4[8] = {0x08,    // PowerPad #4
-                                   0x04,    // PowerPad #3
-                                   0x800,   // PowerPad #12
-                                   0x80,    // PowerPad #8
-                                   NODATA,  // No Data
-                                   NODATA,  // No Data
-                                   NODATA,  // No Data
-                                   NODATA   // No Data
-                                   }; 
-
-// Power Pad D3
-uint32_t  dataMaskPowerPadD3[8] = {0x02,   // PowerPad #2
-                                   0x01,   // PowerPad #1
-                                   0x10,   // PowerPad #5
-                                   0x100,  // PowerPad #9
-                                   0x20,   // PowerPad #6
-                                   0x200,  // PowerPad #10
-                                   0x400,  // PowerPad #11
-                                   0x40    // PowerPad #7
-                                   }; 
-
-uint32_t  dataMaskSNES[32] =      {0x01,    // B
-                                   0x04,    // Y
-                                   0x40,    // Start   
-                                   0x80,    // Select
-                                   UP,      // D-Up
-                                   DOWN,    // D-Down
-                                   LEFT,    // D-Left
-                                   RIGHT,   // D-Right
-                                   0x02,    // A
-                                   0x08,    // X
-                                   0x10,    // L
-                                   0x20,    // R
-                                   NODATA,  // SNES Control Bit
-                                   NTT_BIT, // NTT Indicator Bit
-                                   NODATA,  // SNES Control Bit
-                                   NODATA,  // SNES Control Bit
-                                   0x100,   // NTT 0
-                                   0x200,   // NTT 1
-                                   0x400,   // NTT 2
-                                   0x800,   // NTT 3
-                                   0x1000,  // NTT 4
-                                   0x2000,  // NTT 5
-                                   0x4000,  // NTT 6
-                                   0x8000,  // NTT 7
-                                   0x10000, // NTT 8
-                                   0x20000, // NTT 9
-                                   0x40000, // NTT *
-                                   0x80000, // NTT #
-                                   0x100000,// NTT .
-                                   0x200000,// NTT C
-                                   NODATA,  // NTT No Data
-                                   0x800000,// NTT End Comms
-                                   };
-
-void setup() 
+void setup()
 {
   // Pin 4 Toggle Switch
   DDRD  &= ~B00010000; // inputs
@@ -171,31 +101,21 @@ void setup()
   // On Board RX LED
   DDRB  |= B00000001; // output
   PORTB |= B00000001; // high
-  
-  // Setup NES / SNES latch and clock pins (2/3 or PD1/PD0)
-  DDRD  |=  B00000011; // output
-  PORTD &= ~B00000011; // low
 
-  // Setup NES / SNES data pins (A0/A1 or PF6/PF7)
-  DDRF  &= ~B11000000; // inputs
-  PORTF |=  B11000000; // enable internal pull-ups
-
-  // Setup NES PowerPad data pins (8/9 or PB4/PB5)
-  DDRB  &= ~B00110000; // inputs
-  PORTB |=  B00110000; // enable internal pull-ups
+  nesSnesReader.init();
 
   // Setup power pin (DB9 Pin 5) as output high (PB2)
   DDRB  |= B00000100; // output
   PORTB |= B00000100; // high
-  
+
   SetupHardware();
   GlobalInterruptEnable();
 }
 
-void loop() 
-{   
+void loop()
+{
     currentGenesisState = 0;
-    
+
     //8 cycles needed to capture 6-button controllers
     for(uint8_t i = 0; i < 8; i++)
     {
@@ -203,75 +123,12 @@ void loop()
     }
 
     currentGenesisState = gen_controller.getFinalState();
-    
-    for(uint8_t j = 0; j < 1; j++)
-    {
-      sendLatch();
 
-      controllerData[NES][BUTTONS] = 0;
-      controllerData[NES][AXES] = 0;
-      
-      controllerData[SNES][BUTTONS] = 0;
-      controllerData[SNES][AXES] = 0;
-
-      nttActive = false;
-  
-      for(uint8_t dataBitCounter = 0; dataBitCounter < 32; dataBitCounter++)
-      {
-        // If no NTT controller, end the loop early
-        if(!nttActive && dataBitCounter > 13)
-        {
-          break;
-        }
-
-        //NES Power Pad Controller
-        if((dataBitCounter < 8) && ((PINB & B00100000) == 0)) //Power Pad Pin D4 (bottom)
-        { 
-          controllerData[NES][BUTTONS] |= dataMaskPowerPadD4[dataBitCounter];
-        }
-
-        if((dataBitCounter < 8) && ((PINB & B00010000) == 0)) //Power Pad Pin D3 (middle)
-        { 
-          controllerData[NES][BUTTONS] |= dataMaskPowerPadD3[dataBitCounter];
-        }
-
-        // NES Controller
-        if((dataBitCounter < 8) && ((PINF & B10000000) == 0)) //If NES data line is low (indicating a press)
-        { 
-          if(axisIndicator[dataBitCounter])
-          {
-            controllerData[NES][AXES] |= dataMaskNES[dataBitCounter];
-          }
-          else
-          {
-            controllerData[NES][BUTTONS] |= dataMaskNES[dataBitCounter];
-          }
-        }
-
-        // SNES / NTT Controller 
-        if((PINF & B01000000) == 0) //If SNES data line is low (indicating a press)
-        {
-          if(dataBitCounter == 13)
-          {
-            nttActive = true;
-          }
-          
-          if(axisIndicator[dataBitCounter])
-          {
-            controllerData[SNES][AXES] |= dataMaskSNES[dataBitCounter];
-          }
-          else
-          {
-            controllerData[SNES][BUTTONS] |= dataMaskSNES[dataBitCounter];
-          }
-        }
-        
-        sendClock();
-      }
-    }
+    nesSnesReader.read(controllerData[NES][BUTTONS], controllerData[NES][AXES],
+                        controllerData[SNES][BUTTONS], controllerData[SNES][AXES]);
 
   __builtin_avr_delay_cycles(1000);
-  
+
   sendState();
 }
 
@@ -283,24 +140,6 @@ void sendState()
   USB_USBTask();
 }
 
-void sendLatch()
-{
-  // Send a latch pulse to NES/SNES
-  PORTD |=  B00000010; // Set HIGH
-  __builtin_avr_delay_cycles(192);
-  PORTD &= ~B00000010; // Set LOW
-  __builtin_avr_delay_cycles(72);
-}
-
-void sendClock()
-{
-  // Send a clock pulse to NES/SNES
-  PORTD |=  B00000001; // Set HIGH
-  __builtin_avr_delay_cycles(96);
-  PORTD &= ~B00000001; // Set LOW
-  __builtin_avr_delay_cycles(72);
-}
-
 void buttonRead()
 {
   buttonStatus[BUTTONUP]      = (controllerData[NES][AXES] & UP)          |  (controllerData[SNES][AXES] & UP)          | ((currentGenesisState & SC_BTN_UP) >> SC_BIT_SH_UP);
@@ -308,7 +147,7 @@ void buttonRead()
   buttonStatus[BUTTONLEFT]    = ((controllerData[NES][AXES] & LEFT) >> 2)  | ((controllerData[SNES][AXES] & LEFT) >> 2)  | ((currentGenesisState & SC_BTN_LEFT) >> SC_BIT_SH_LEFT);
   buttonStatus[BUTTONRIGHT]   = ((controllerData[NES][AXES] & RIGHT) >> 3) | ((controllerData[SNES][AXES] & RIGHT) >> 3) | ((currentGenesisState & SC_BTN_RIGHT) >> SC_BIT_SH_RIGHT);
   buttonStatus[BUTTONA]       = (controllerData[NES][BUTTONS] & 0x02 ? 1:0) | (controllerData[SNES][BUTTONS] & 0x02 ? 1:0) | (currentGenesisState & SC_BTN_C ? 1:0);
-  
+
   if(Swap_Gen_Button)
   {
     buttonStatus[BUTTONRB]      = (controllerData[SNES][BUTTONS] & 0x20) | (currentGenesisState & SC_BTN_Y ? 1:0);
@@ -321,7 +160,7 @@ void buttonRead()
     buttonStatus[BUTTONB]       = (controllerData[NES][BUTTONS] & 0x01 ? 1:0) | (controllerData[SNES][BUTTONS] & 0x01 ? 1:0) | (currentGenesisState & SC_BTN_B ? 1:0);
     buttonStatus[BUTTONX]       = (controllerData[SNES][BUTTONS] & 0x08) | (currentGenesisState & SC_BTN_Y ? 1:0);
   }
-  
+
   buttonStatus[BUTTONY]       = (controllerData[SNES][BUTTONS] & 0x04) | (currentGenesisState & SC_BTN_A ? 1:0);
   buttonStatus[BUTTONLB]      = (controllerData[SNES][BUTTONS] & 0x10) | (currentGenesisState & SC_BTN_X ? 1:0);
   buttonStatus[BUTTONLT]      = 0;
@@ -340,7 +179,7 @@ void buttonRead()
   /////////////////////////////////////////////
 
   // NES - SNES - Genesis: Home Command (Select/Mode + Start)
-  if(buttonStatus[BUTTONSELECT] && buttonStatus[BUTTONSTART])  
+  if(buttonStatus[BUTTONSELECT] && buttonStatus[BUTTONSTART])
   {
     buttonStatus[BUTTONSTART]   = 0;
     buttonStatus[BUTTONSELECT]  = 0;
@@ -357,7 +196,7 @@ void buttonRead()
   }
 
   // NES - SNES - Genesis: Screenshot Command (Select/Mode + D-Up)
-  if(buttonStatus[BUTTONSELECT] && buttonStatus[BUTTONUP])  
+  if(buttonStatus[BUTTONSELECT] && buttonStatus[BUTTONUP])
   {
     buttonStatus[BUTTONUP]      = 0;
     buttonStatus[BUTTONSELECT]  = 0;
@@ -367,7 +206,7 @@ void buttonRead()
   /////////////////////////////////////////////
 
   // Genesis 3-Button: In-Game Menu Command (A + B + C + Start)
-  if((!gen_controller.sixButtonMode) && (currentGenesisState & SC_BTN_START ? 1:0) && (currentGenesisState & SC_BTN_A ? 1:0) && (currentGenesisState & SC_BTN_B ? 1:0) && (currentGenesisState & SC_BTN_C ? 1:0))
+  if((!gen_controller.isSixButtonMode()) && (currentGenesisState & SC_BTN_START ? 1:0) && (currentGenesisState & SC_BTN_A ? 1:0) && (currentGenesisState & SC_BTN_B ? 1:0) && (currentGenesisState & SC_BTN_C ? 1:0))
   {
     buttonStatus[BUTTONSTART] = 0;
     buttonStatus[BUTTONY]     = 0;
@@ -378,16 +217,16 @@ void buttonRead()
   }
 
   // Genesis 3-Button: Home Command (A + D-Down + Start)
-  if((!gen_controller.sixButtonMode) && (currentGenesisState & SC_BTN_START ? 1:0) && (currentGenesisState & SC_BTN_A ? 1:0) && ((currentGenesisState & SC_BTN_DOWN) >> SC_BIT_SH_DOWN))
+  if((!gen_controller.isSixButtonMode()) && (currentGenesisState & SC_BTN_START ? 1:0) && (currentGenesisState & SC_BTN_A ? 1:0) && ((currentGenesisState & SC_BTN_DOWN) >> SC_BIT_SH_DOWN))
   {
     buttonStatus[BUTTONSTART] = 0;
     buttonStatus[BUTTONY]     = 0;
     buttonStatus[BUTTONDOWN]  = 0;
     buttonStatus[BUTTONHOME]  = 1;
-  } 
+  }
 
   // Genesis 3-Button: Home Command (A + D-Up + Start)
-  if((!gen_controller.sixButtonMode) && (currentGenesisState & SC_BTN_START ? 1:0) && (currentGenesisState & SC_BTN_A ? 1:0) && ((currentGenesisState & SC_BTN_UP) >> SC_BIT_SH_UP))
+  if((!gen_controller.isSixButtonMode()) && (currentGenesisState & SC_BTN_START ? 1:0) && (currentGenesisState & SC_BTN_A ? 1:0) && ((currentGenesisState & SC_BTN_UP) >> SC_BIT_SH_UP))
   {
     buttonStatus[BUTTONSTART]   = 0;
     buttonStatus[BUTTONY]       = 0;
@@ -397,9 +236,9 @@ void buttonRead()
 }
 
 void toggleControls()
-{ 
+{
   static unsigned long currentTime = 0;
-  
+
   if(buttonStatus[BUTTONSELECT] && buttonStatus[BUTTONDOWN])
   {
      if(millis() - currentTime > toggleDelay)
@@ -416,7 +255,7 @@ void toggleControls()
         Swap_DPAD_JOY = false;
         PORTD |= B00100000; // OFF
        }
-       currentTime = millis();     
+       currentTime = millis();
      }
   }
   else if(buttonStatus[BUTTONSELECT] && buttonStatus[BUTTONB])
@@ -435,7 +274,7 @@ void toggleControls()
         Swap_Gen_Button = false;
         PORTB |= B00000001; // OFF
        }
-       currentTime = millis();     
+       currentTime = millis();
      }
   }
   else
@@ -449,9 +288,9 @@ void processInputs()
 {
   //D-Pad as Left Joystick
   if(Swap_DPAD_JOY == true)
-  { 
+  {
     if      ((buttonStatus[BUTTONUP]) && (buttonStatus[BUTTONRIGHT]))     {ReportData.LX = 255; ReportData.LY = 000;}
-    else if ((buttonStatus[BUTTONDOWN]) && (buttonStatus[BUTTONRIGHT]))   {ReportData.LX = 255; ReportData.LY = 255;} 
+    else if ((buttonStatus[BUTTONDOWN]) && (buttonStatus[BUTTONRIGHT]))   {ReportData.LX = 255; ReportData.LY = 255;}
     else if ((buttonStatus[BUTTONDOWN]) && (buttonStatus[BUTTONLEFT]))    {ReportData.LX = 000; ReportData.LY = 255;}
     else if ((buttonStatus[BUTTONUP]) && (buttonStatus[BUTTONLEFT]))      {ReportData.LX = 000; ReportData.LY = 000;}
     else if (buttonStatus[BUTTONUP])                                      {ReportData.LX = 128; ReportData.LY = 000;}
@@ -459,7 +298,7 @@ void processInputs()
     else if (buttonStatus[BUTTONLEFT])                                    {ReportData.LX = 000; ReportData.LY = 128;}
     else if (buttonStatus[BUTTONRIGHT])                                   {ReportData.LX = 255; ReportData.LY = 128;}
     else                                                                  {ReportData.LX = 128; ReportData.LY = 128;}
-    
+
     ReportData.HAT = DPAD_NOTHING_MASK_ON;
   }
   //D-Pad as Direction Pad (HAT)
@@ -467,9 +306,9 @@ void processInputs()
   {
     ReportData.LX = 128;
     ReportData.LY = 128;
-    
+
     if      ((buttonStatus[BUTTONUP]) && (buttonStatus[BUTTONRIGHT]))     {ReportData.HAT = DPAD_UPRIGHT_MASK_ON;}
-    else if ((buttonStatus[BUTTONDOWN]) && (buttonStatus[BUTTONRIGHT]))   {ReportData.HAT = DPAD_DOWNRIGHT_MASK_ON;} 
+    else if ((buttonStatus[BUTTONDOWN]) && (buttonStatus[BUTTONRIGHT]))   {ReportData.HAT = DPAD_DOWNRIGHT_MASK_ON;}
     else if ((buttonStatus[BUTTONDOWN]) && (buttonStatus[BUTTONLEFT]))    {ReportData.HAT = DPAD_DOWNLEFT_MASK_ON;}
     else if ((buttonStatus[BUTTONUP]) && (buttonStatus[BUTTONLEFT]))      {ReportData.HAT = DPAD_UPLEFT_MASK_ON;}
     else if (buttonStatus[BUTTONUP])                                      {ReportData.HAT = DPAD_UP_MASK_ON;}
@@ -478,7 +317,7 @@ void processInputs()
     else if (buttonStatus[BUTTONRIGHT])                                   {ReportData.HAT = DPAD_RIGHT_MASK_ON;}
     else                                                                  {ReportData.HAT = DPAD_NOTHING_MASK_ON;}
   }
-  
+
   ReportData.RX = RightX;
   ReportData.RY = RightY;
 

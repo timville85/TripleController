@@ -1,0 +1,105 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>3dapter Firmware Flasher</title>
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+<main>
+  <header>
+    <h1>3dapter Firmware Flasher</h1>
+    <p>Flash official 3dapter (Triple Controller) firmware over USB — no Arduino IDE required.</p>
+  </header>
+
+  <div id="unsupported-banner" class="banner" hidden>
+    <strong>Your browser doesn't support this.</strong>
+    This flasher needs the Web Serial API, available in Chrome or Edge on desktop.
+    You can still flash firmware the old way — see
+    <a href="https://github.com/timville85/TripleController#readme">the firmware README</a>.
+  </div>
+
+  <section class="panel step">
+    <h2><span class="step-number">1</span> Choose your firmware</h2>
+    <select id="variant-select"></select>
+    <p class="muted" id="variant-detail"></p>
+    <p class="note" id="variant-note" hidden></p>
+    <p class="hint">
+      Don't see a release build, or want to test a firmware you built yourself?
+      <label for="local-hex-input" style="cursor:pointer; color: var(--accent);">Load a .hex file instead</label>.
+      <input type="file" id="local-hex-input" accept=".hex" hidden>
+    </p>
+  </section>
+
+  <section class="panel step">
+    <h2><span class="step-number">2</span> Connect</h2>
+    <p class="muted">
+      Click below and pick your 3dapter. If a second button appears here right
+      after, click it fast — it means your browser needs one more click to
+      finish connecting, and the board only waits a few seconds before giving up.
+    </p>
+    <p class="muted" id="manualreset-hint">
+      This firmware doesn't show up as a serial port on its own — press and release
+      the small reset button on the 3dapter PCB first, then click below.
+    </p>
+    <button id="connect-button" data-requires-serial>Connect</button>
+
+    <button id="manual-bootloader-button" class="secondary" data-requires-serial hidden>
+      Board resetting — click now to select it
+    </button>
+
+    <details class="details-hint">
+      <summary>Why does it sometimes need a second click?</summary>
+      <p class="muted">
+        Flashing needs the board in a special "bootloader" mode. If it isn't
+        already, we reset it automatically — but browsers only allow a device
+        picker to open once per click, so picking the board again afterward
+        needs a fresh click the first time you flash it here. The device may
+        also take a couple of seconds to reappear in the picker under a
+        different name than before. Once a board's been through this once,
+        later flashes should reconnect automatically with no extra click.
+      </p>
+    </details>
+  </section>
+
+  <section class="panel step">
+    <h2><span class="step-number">3</span> Flashing</h2>
+    <p class="muted">Progress shows here once connected. You can also click below to
+      retry without reconnecting, if needed.</p>
+    <button id="flash-button" disabled>Flash again</button>
+    <progress id="progress-bar" value="0" max="100" hidden></progress>
+    <div id="status" class="status"></div>
+    <div id="log"></div>
+  </section>
+
+  <section class="panel step">
+    <h2><span class="step-number">4</span> Done</h2>
+    <p class="muted">
+      Once flashing finishes above, your 3dapter is running the new firmware.
+      Unplug and replug it if it doesn't show up right away.
+    </p>
+  </section>
+
+  <section class="panel step">
+    <h2><span class="step-number">5</span> Test it</h2>
+    <p class="muted">Press any button on your 3dapter to confirm it's working.</p>
+    <div id="quick-test-status" class="status"></div>
+    <p class="muted" id="quick-test-note" hidden>
+      This build has more than one gamepad wired to it, but browsers only
+      ever show one of them here — that's a Chrome/Edge limitation, not a
+      problem with your board. Any response above means it's working; see
+      <a href="diagnostics.html">Advanced diagnostics</a> if you want to
+      confirm each port individually.
+    </p>
+  </section>
+
+  <footer>
+    <a href="https://github.com/timville85/TripleController">3dapter on GitHub</a> ·
+    firmware source and build instructions in the repo ·
+    <a href="diagnostics.html">Advanced diagnostics</a>
+  </footer>
+</main>
+<script type="module" src="flasher.js"></script>
+</body>
+</html>

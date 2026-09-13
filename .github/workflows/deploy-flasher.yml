@@ -1,0 +1,37 @@
+name: Deploy flasher to Cloudflare
+
+on:
+  push:
+    branches:
+      - refactor/shared-controller-library
+    paths:
+      - "docs/**"
+      - "wrangler.jsonc"
+      - "lib/**"
+      - "3dapter_FW-HID/**"
+      - "3dapter_FW-Switch/**"
+      - "3dapter_FW-XInput/**"
+      - "ci/build-all.sh"
+      - ".github/workflows/deploy-flasher.yml"
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: arduino/setup-arduino-cli@v2
+
+      - name: Build firmware
+        run: ./ci/build-all.sh
+
+      - name: Copy firmware into site
+        run: |
+          mkdir -p docs/firmware
+          cp dist/*.hex docs/firmware/
+
+      - uses: cloudflare/wrangler-action@v3
+        with:
+          apiToken: ${{ secrets.CLOUDFLARE_API_TOKEN }}
+          wranglerVersion: "4.131.1"
+          command: deploy
